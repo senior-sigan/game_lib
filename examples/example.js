@@ -6,12 +6,12 @@ const PaletteScene = require('palette');
 const RandomLinesScene = require('random_lines');
 
 const sceneManager = new SceneManager([
+    new MouseScene(),
     // new NativeHelloWorld(),
     // new SoundScene(),
     new PaletteScene(),
     new RandomLinesScene(),
     // new ButtonsScene(),
-    new MouseScene(),
     new PrismaScene()
 ]);
 

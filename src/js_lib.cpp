@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 
+#include "context.hpp"
 #include "duk_helpers.hpp"
 
 const int PALETTE_LEN = 16;
@@ -168,18 +169,7 @@ static const struct {
     //    {js_PlaySFX, 3, "playSFX"},
 };
 
-void RegisterJsLib(duk_context *ctx) {
-  for (const auto &i : ApiFunc) {
-    duk_push_c_function(ctx, i.func, i.params);
-    duk_put_global_string(ctx, i.name);
-  }
-
-  SetupPaletteConst(ctx);
-  RegisterConstant(ctx, "DISPLAY_HEIGHT", 136);
-  RegisterConstant(ctx, "DISPLAY_WIDTH", 240);
-}
-
-void OnUpdateJsLib(duk_context *ctx) {
+static void RegisterInputs(duk_context *ctx) {
   auto idx = duk_push_object(ctx);
   for (auto &key : keys) {
     if (IsKeyDown(key.second)) {
@@ -207,11 +197,28 @@ void OnUpdateJsLib(duk_context *ctx) {
       duk_put_prop_string(ctx, idx, "mouseDown");
     }
 
-    duk_push_int(ctx, GetMouseX());
+    auto mpos = context.GetVirtualMousePosition();
+    duk_push_int(ctx, mpos.x);
     duk_put_prop_string(ctx, idx, "mouseX");
 
-    duk_push_int(ctx, GetMouseY());
+    duk_push_int(ctx, mpos.y);
     duk_put_prop_string(ctx, idx, "mouseY");
   }
   duk_put_global_string(ctx, "INPUT");
+}
+
+void RegisterJsLib(duk_context *ctx) {
+  for (const auto &i : ApiFunc) {
+    duk_push_c_function(ctx, i.func, i.params);
+    duk_put_global_string(ctx, i.name);
+  }
+
+  SetupPaletteConst(ctx);
+  RegisterConstant(ctx, "DISPLAY_HEIGHT", 136);
+  RegisterConstant(ctx, "DISPLAY_WIDTH", 240);
+  RegisterInputs(ctx);
+}
+
+void OnUpdateJsLib(duk_context *ctx) {
+  RegisterInputs(ctx);
 }
