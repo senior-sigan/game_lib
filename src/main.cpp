@@ -7,8 +7,8 @@
 #include "js_lib.hpp"
 #include "js_stl.hpp"
 
-const int screenWidth = 240;
-const int screenHeight = 136;
+const int canvasWidth = 240;
+const int canvasHeight = 136;
 
 class JsRuntimeHolder {
   duk_context* const ctx;
@@ -50,8 +50,18 @@ class JsRuntimeHolder {
 int main() {
   JsRuntimeHolder js("example.js");
 
-  InitWindow(screenWidth, screenHeight, "Fantasy Console");
-  SetTargetFPS(30);
+  InitWindow(canvasWidth * 4, canvasHeight * 4, "Fantasy Console");
+  SetTargetFPS(60);
+
+  RenderTexture2D target = LoadRenderTexture(canvasWidth, canvasHeight);
+  SetTextureFilter(target.texture, FILTER_POINT);
+
+  Rectangle textureRect{
+      0.0f,
+      0.0f,
+      static_cast<float>(target.texture.width),
+      -static_cast<float>(target.texture.height),
+  };
 
   bool started = false;
 
@@ -60,10 +70,25 @@ int main() {
       started = true;
       js.OnInit();
     }
+
+    auto sw = static_cast<float>(GetScreenWidth());
+    auto sh = static_cast<float>(GetScreenHeight());
+    auto scale = std::min(sw / canvasWidth, sw / canvasHeight);
+    auto destRect = Rectangle{
+        (sw - canvasWidth * scale) * 0.5f,
+        (sh - canvasHeight * scale) * 0.5f,
+        canvasWidth * scale,
+        canvasHeight * scale,
+    };
+
     js.OnUpdate();
 
     BeginDrawing();
+    ClearBackground(BLACK);
+    BeginTextureMode(target);
     js.OnDraw();
+    EndTextureMode();
+    DrawTexturePro(target.texture, textureRect, destRect, Vector2{0, 0}, 0.0f, WHITE);
     EndDrawing();
   }
   CloseWindow();
