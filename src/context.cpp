@@ -49,22 +49,18 @@ void Context::Init(JsRuntimeHolder* runtime) {
       -static_cast<float>(canvas_.texture.height),
   };
 }
-void Context::RunLoop() {
-  while (!should_stop_ && !WindowShouldClose()) {
-    UpdateDestRect();
-    runtime_->OnUpdate();
-    BeginDrawing();
-    ClearBackground(BLACK);
-    BeginTextureMode(canvas_);
-    runtime_->OnDraw();
-    EndTextureMode();
-    DrawTexturePro(canvas_.texture, canvasField_, dest_rect_, ZeroVector2, 0.0f, WHITE);
-    EndDrawing();
-  }
+void Context::Update() {
+  UpdateDestRect();
+  runtime_->OnUpdate();
+  BeginDrawing();
+  ClearBackground(BLACK);
+  BeginTextureMode(canvas_);
+  runtime_->OnDraw();
+  EndTextureMode();
+  DrawTexturePro(canvas_.texture, canvasField_, dest_rect_, ZeroVector2, 0.0f, WHITE);
+  EndDrawing();
 }
-void Context::Dispose() {
-  CloseWindow();
-}
+
 Vector2 Context::GetVirtualMousePosition() const {
   auto mouse = GetMousePosition();
   auto sw = static_cast<float>(GetScreenWidth());
@@ -73,5 +69,16 @@ Vector2 Context::GetVirtualMousePosition() const {
   auto y = (mouse.y - (sh - (canvas_height() * scale_)) * 0.5f) / scale_;
   return ClampValue(Vector2{x, y}, {0, 0}, {canvas_width(), canvas_height()});
 }
-
-Context context{};
+bool Context::ShouldStop() const {
+  return should_stop_ || ShouldExit();
+}
+bool Context::ShouldExit() const {
+  return WindowShouldClose();
+}
+Context::~Context() {
+  TraceLog(LOG_INFO, "Context destroyed");
+  CloseWindow();
+}
+void Context::Reset() {
+  should_stop_ = true;
+}

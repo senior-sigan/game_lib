@@ -7,14 +7,14 @@ function Prisma() {
 }
 
 Prisma.prototype.onRender = function () {
-    var base = 143;
-    var pi8 = Math.PI / 8;
-    var pi2 = Math.PI * 2;
+    const base = 143;
+    const pi8 = Math.PI / 8;
+    const pi2 = Math.PI * 2;
     draw_clear_screen(PALETTE[0]);
 
-    var red = [255, 0, 0, 255];
-    var green = [0, 255, 0, 255];
-    var blue = [0, 0, 255, 255];
+    const red = [255, 0, 0, 255];
+    const green = [0, 255, 0, 255];
+    const blue = [0, 0, 255, 255];
     var i = 0;
 
     for (i = Math.fmod(this.t, 8.0); i < base; i += 8.0) {
@@ -22,7 +22,7 @@ Prisma.prototype.onRender = function () {
         var y = Math.floor(base - i);
         draw_line(x, 0, 0, y, red);
         draw_line(x, base, base, y, green);
-        this.t += get_delta();
+        this.t += DELTA_TIME;
     }
 
     for (i = Math.fmod(this.t / 16, pi8); i < pi2; i += pi8) {

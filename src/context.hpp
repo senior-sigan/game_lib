@@ -13,7 +13,7 @@ class Context {
   JsRuntimeHolder* runtime_{};
   Rectangle canvasField_{};
   Rectangle dest_rect_{};
-  float scale_;
+  float scale_ = 1.0f;
   RenderTexture2D canvas_{};
 
   void UpdateDestRect();
@@ -28,10 +28,17 @@ class Context {
 
  public:
   void Init(JsRuntimeHolder* runtime);
-  void RunLoop();
-  void Dispose();
+  void Update();
+  void Reset();
+  ~Context();
+
+  // ShouldStop returns true if user decided to restart cartridge
+  [[nodiscard]] bool ShouldStop() const;
+  // ShouldExit returns true if user decided to exit from the app
+  [[nodiscard]] bool ShouldExit() const;
 
   [[nodiscard]] Vector2 GetVirtualMousePosition() const;
 };
 
-extern Context context;
+Context* GetContext();
+void SetContext(Context* context);

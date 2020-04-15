@@ -3,12 +3,21 @@
 #include "context.hpp"
 #include "js_runtime.hpp"
 
-int main() {
+static bool run() {
   JsRuntimeHolder js("example.js");
+  Context ctx{};
+  SetContext(&ctx);
 
-  context.Init(&js);
-  context.RunLoop();
-  context.Dispose();
+  GetContext()->Init(&js);
+  while (!GetContext()->ShouldStop()) {
+    GetContext()->Update();
+  }
+  return !GetContext()->ShouldExit();
+}
 
+int main() {
+  // Infinite loop of restarts
+  while (run())
+    ;
   return 0;
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include "context.hpp"
+
 
 typedef struct duk_hthread duk_context;
 

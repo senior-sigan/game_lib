@@ -6,10 +6,6 @@ declare namespace module {
 
 declare function draw_clear_screen(color: Color): void;
 
-declare function get_display_width(): number;
-
-declare function get_display_height(): number;
-
 declare function set_pixel(x: number, y: number, color: Color): void;
 
 declare function get_pixel(x: number, y: number): number;
@@ -26,23 +22,15 @@ declare function draw_circle_fill(x: number, y: number, radius: number, color: C
 
 declare function draw_sprite(sprite_id: number, screen_x: number, screen_y: number, sheet_x: number, sheet_y: number, width: number, height: number): void;
 
-declare function get_delta(): number;
-
-declare function get_time(): number;
-
 declare function show_text(text: string, x: number, y: number, color: Color, size: number, spacing: number): void;
 
 declare function import_sprite(file_name: string): number;
 
-declare function print(text: string): void;
-
-declare function is_pressed(btn: number): boolean;
-
-declare function is_clicked(btn: number): boolean;
-
-declare function get_mouse(): { x: number, y: number };
+declare function trace(text: string): void;
 
 declare function exit(): void;
+
+declare function reset(): void;
 
 declare function importMusic(path: string, name: string): void;
 
@@ -54,6 +42,12 @@ declare function playSFX(name: string, loop: number, ticks: number): void;
 
 declare const PALETTE_LEN: number;
 declare const PALETTE: Color[];
+
+declare const DISPLAY_HEIGHT: number;
+declare const DISPLAY_WIDTH: number;
+
+declare const TIME: number;
+declare const DELTA_TIME: number;
 
 declare namespace INPUT {
     const up: boolean;

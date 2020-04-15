@@ -95,18 +95,6 @@ void SetupPaletteConst(duk_context *ctx) {
   duk_put_global_string(ctx, "PALETTE");
 }
 
-duk_ret_t js_GetTime(duk_context *ctx) {
-  auto time = GetTime();
-  duk_push_number(ctx, time);
-  return 1;
-}
-
-duk_ret_t js_GetDelta(duk_context *ctx) {
-  auto time = GetFrameTime();
-  duk_push_number(ctx, time);
-  return 1;
-}
-
 duk_ret_t js_DrawRectFill(duk_context *ctx) {
   auto x = duk_to_int(ctx, 0);
   auto y = duk_to_int(ctx, 1);
@@ -144,13 +132,27 @@ duk_ret_t js_DrawCircleFill(duk_context *ctx) {
   return 0;
 }
 
+static duk_ret_t js_Trace(duk_context *ctx) {
+  duk_push_string(ctx, " ");
+  duk_insert(ctx, 0);
+  duk_join(ctx, duk_get_top(ctx) - 1);
+
+  TraceLog(LOG_INFO, duk_safe_to_string(ctx, -1));
+
+  return 0;
+}
+
+static duk_ret_t js_Reset(duk_context* ctx) {
+  GetContext()->Reset();
+  return 0;
+}
+
 static const struct {
   duk_c_function func;
   int params;
   const char *name;
 } ApiFunc[] = {
-    //    {js_GetDisplayHeight, 0, "get_display_height"},
-    //    {js_GetDisplayWidth, 0, "get_display_width"},
+    {js_Trace, DUK_VARARGS, "trace"},
     {js_DrawRectFill, 5, "draw_rect_fill"},
     {js_DrawRect, 5, "draw_rect"},
     {js_GetPixel, 2, "get_pixel"},
@@ -159,9 +161,8 @@ static const struct {
     {js_DrawLine, 5, "draw_line"},
     {js_DrawCircle, 4, "draw_circle"},
     {js_DrawCircleFill, 4, "draw_circle_fill"},
+    {js_Reset, 0, "reset"},
     //    {js_DrawSprite, 7, "draw_sprite"},
-    {js_GetTime, 0, "get_time"},
-    {js_GetDelta, 0, "get_delta"},
     //    {js_ShowText, 6, "show_text"},
     //    {js_ImportMusic, 2, "importMusic"},
     //    {js_ImportSFX, 2, "importSFX"},
@@ -197,7 +198,7 @@ static void RegisterInputs(duk_context *ctx) {
       duk_put_prop_string(ctx, idx, "mouseDown");
     }
 
-    auto mpos = context.GetVirtualMousePosition();
+    auto mpos = GetContext()->GetVirtualMousePosition();
     duk_push_int(ctx, mpos.x);
     duk_put_prop_string(ctx, idx, "mouseX");
 
@@ -205,6 +206,11 @@ static void RegisterInputs(duk_context *ctx) {
     duk_put_prop_string(ctx, idx, "mouseY");
   }
   duk_put_global_string(ctx, "INPUT");
+}
+
+static void RegisterTimers(duk_context *ctx) {
+  RegisterConstant(ctx, "TIME", GetTime());
+  RegisterConstant(ctx, "DELTA_TIME", GetFrameTime());
 }
 
 void RegisterJsLib(duk_context *ctx) {
@@ -216,9 +222,10 @@ void RegisterJsLib(duk_context *ctx) {
   SetupPaletteConst(ctx);
   RegisterConstant(ctx, "DISPLAY_HEIGHT", 136);
   RegisterConstant(ctx, "DISPLAY_WIDTH", 240);
-  RegisterInputs(ctx);
+  OnUpdateJsLib(ctx);
 }
 
 void OnUpdateJsLib(duk_context *ctx) {
   RegisterInputs(ctx);
+  RegisterTimers(ctx);
 }

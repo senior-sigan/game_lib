@@ -16,11 +16,13 @@ const sceneManager = new SceneManager([
 ]);
 
 function init() {
-
+    trace("Random number "+Math.random());
 }
 
 function update() {
-    // print(JSON.stringify(INPUT));
+    if (INPUT.zPressed) {
+        reset();
+    }
 }
 
 function draw() {
