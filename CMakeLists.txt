@@ -21,6 +21,7 @@ if (EMSCRIPTEN)
     set(CMAKE_EXECUTABLE_SUFFIX ".js")
 
     file(COPY examples DESTINATION ${CMAKE_BINARY_DIR}/)
+    file(COPY examples/index.html DESTINATION ${CMAKE_BINARY_DIR}/)
 else ()
     file(COPY examples/ DESTINATION ${CMAKE_BINARY_DIR})
 endif ()
