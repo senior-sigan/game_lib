@@ -18,7 +18,7 @@ SceneManager.prototype.onRender = function () {
         trace("Transition to next scene");
         this.currentScene = (this.currentScene + 1) % this.scenes.length;
     }
-    if (INPUT.enterPressed) {
+    if (INPUT.startPressed) {
         exit();
     }
 };

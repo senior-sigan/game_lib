@@ -6,7 +6,7 @@ function RandomLinesScene() {
 }
 
 RandomLinesScene.prototype.onCreate = function () {
-    draw_clear_screen(PALETTE[0]);
+    draw_clear_screen(0);
 };
 RandomLinesScene.prototype.onRender = function () {
     const x0 = randint(0, DISPLAY_WIDTH);
@@ -16,7 +16,7 @@ RandomLinesScene.prototype.onRender = function () {
 
     const i = (TIME % PALETTE_LEN) >> 0;
 
-    draw_line(x0, y0, x1, y1, PALETTE[i]);
+    draw_line(x0, y0, x1, y1, i);
 };
 RandomLinesScene.prototype.onDispose = function () {
 };

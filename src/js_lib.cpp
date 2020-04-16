@@ -9,8 +9,8 @@
 #include "context.hpp"
 #include "duk_helpers.hpp"
 
-const int PALETTE_LEN = 16;
-const Color PALETTE[PALETTE_LEN] = {
+constexpr int PALETTE_LEN = 16;
+constexpr Color PALETTE[PALETTE_LEN] = {
     Color{0, 0, 0, 255},      Color{29, 43, 83, 255},    Color{126, 37, 83, 255},   Color{0, 135, 81, 255},
     Color{171, 82, 54, 255},  Color{95, 87, 79, 255},    Color{194, 195, 199, 255}, Color{255, 241, 232, 255},
     Color{255, 0, 77, 255},   Color{255, 163, 0, 255},   Color{255, 240, 36, 255},  Color{0, 231, 86, 255},
@@ -21,34 +21,9 @@ const std::map<std::string, int> keys{{"up", KEY_UP},       {"down", KEY_DOWN}, 
                                       {"space", KEY_SPACE}, {"z", KEY_Z},         {"x", KEY_X}};
 
 Color GetDukColor(duk_context *ctx, int idx) {
-  Color color{};
-  auto len = duk_get_length(ctx, idx);
-  if (len != 4) {
-    std::cerr << "Color should be array of 4 ints, but got " << len << "\n";
-  } else {
-    duk_get_prop_index(ctx, idx, 0);
-    color.r = duk_to_uint16(ctx, -1);
-    duk_get_prop_index(ctx, idx, 1);
-    color.g = duk_to_uint16(ctx, -1);
-    duk_get_prop_index(ctx, idx, 2);
-    color.b = duk_to_uint16(ctx, -1);
-    duk_get_prop_index(ctx, idx, 3);
-    color.a = duk_to_uint16(ctx, -1);
-  }
+  auto colorIdx = duk_to_int(ctx, idx);
+  auto color = PALETTE[colorIdx % PALETTE_LEN];
   return color;
-}
-
-duk_idx_t PutDukColor(duk_context *ctx, const Color &color) {
-  auto colors_idx = duk_push_array(ctx);
-  duk_push_number(ctx, color.r);
-  duk_put_prop_index(ctx, colors_idx, 0);
-  duk_push_number(ctx, color.g);
-  duk_put_prop_index(ctx, colors_idx, 1);
-  duk_push_number(ctx, color.b);
-  duk_put_prop_index(ctx, colors_idx, 2);
-  duk_push_number(ctx, color.a);
-  duk_put_prop_index(ctx, colors_idx, 3);
-  return colors_idx;
 }
 
 duk_ret_t js_SetPixel(duk_context *ctx) {
@@ -61,10 +36,8 @@ duk_ret_t js_SetPixel(duk_context *ctx) {
 duk_ret_t js_GetPixel(duk_context *ctx) {
   auto x = duk_to_int(ctx, 0);
   auto y = duk_to_int(ctx, 1);
-  Color color{};
-  std::cout << "Not implemented"
-            << "\n";
-  PutDukColor(ctx, color);
+  TraceLog(LOG_ERROR, "GetPixel is not implemented");
+  duk_push_int(ctx, -1);
   return 1;
 }
 
@@ -85,14 +58,6 @@ duk_ret_t js_DrawLine(duk_context *ctx) {
 
 void SetupPaletteConst(duk_context *ctx) {
   RegisterConstant(ctx, "PALETTE_LEN", PALETTE_LEN);
-
-  auto pal_idx = duk_push_array(ctx);
-  for (int i = 0; i < PALETTE_LEN; i++) {
-    auto color = PALETTE[i];
-    PutDukColor(ctx, color);
-    duk_put_prop_index(ctx, pal_idx, i);
-  }
-  duk_put_global_string(ctx, "PALETTE");
 }
 
 duk_ret_t js_DrawRectFill(duk_context *ctx) {
