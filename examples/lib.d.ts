@@ -4,25 +4,25 @@ declare namespace module {
 
 declare function require(name: string): object;
 
-declare function draw_clear_screen(number: number): void;
+declare function draw_clear_screen(color: number): void;
 
-declare function set_pixel(x: number, y: number, number: number): void;
+declare function draw_pixel(x: number, y: number, color: number): void;
 
 declare function get_pixel(x: number, y: number): number;
 
-declare function draw_line(x0: number, y0: number, x1: number, y1: number, number: number): void;
+declare function draw_line(x0: number, y0: number, x1: number, y1: number, color: number): void;
 
-declare function draw_rect_fill(x: number, y: number, w: number, h: number, number: number): void;
+declare function draw_rect_fill(x: number, y: number, w: number, h: number, color: number): void;
 
-declare function draw_rect(x: number, y: number, w: number, h: number, number: number): void;
+declare function draw_rect(x: number, y: number, w: number, h: number, color: number): void;
 
-declare function draw_circle(x: number, y: number, radius: number, number: number): void;
+declare function draw_circle(x: number, y: number, radius: number, color: number): void;
 
-declare function draw_circle_fill(x: number, y: number, radius: number, number: number): void;
+declare function draw_circle_fill(x: number, y: number, radius: number, color: number): void;
 
 declare function draw_sprite(sprite_id: number, screen_x: number, screen_y: number, sheet_x: number, sheet_y: number, width: number, height: number): void;
 
-declare function draw_text(text: string, x: number, y: number, number: number, size: number, spacing: number): void;
+declare function draw_text(text: string, x: number, y: number, color: number, size: number, spacing: number): void;
 
 declare function import_sprite(file_name: string): number;
 
@@ -40,45 +40,45 @@ declare function playMusic(name: string, loop: number): void;
 
 declare function playSFX(name: string, loop: number, ticks: number): void;
 
-declare const PALETTE_LEN: number;
+declare var PALETTE_LEN: number;
 
-declare const DISPLAY_HEIGHT: number;
-declare const DISPLAY_WIDTH: number;
+declare var DISPLAY_HEIGHT: number;
+declare var DISPLAY_WIDTH: number;
 
-declare const TIME: number;
-declare const DELTA_TIME: number;
+declare var TIME: number;
+declare var DELTA_TIME: number;
 
 declare namespace INPUT {
-    const up: boolean;
-    const down: boolean;
-    const left: boolean;
-    const right: boolean;
-    const start: boolean;
-    const pause: boolean;
-    const space: boolean;
-    const z: boolean;
-    const x: boolean;
-    const upPressed: boolean;
-    const downPressed: boolean;
-    const leftPressed: boolean;
-    const rightPressed: boolean;
-    const startPressed: boolean;
-    const pausePressed: boolean;
-    const spacePressed: boolean;
-    const zPressed: boolean;
-    const xPressed: boolean;
-    const upDown: boolean;
-    const downDown: boolean;
-    const leftDown: boolean;
-    const rightDown: boolean;
-    const startDown: boolean;
-    const pauseDown: boolean;
-    const spaceDown: boolean;
-    const zDown: boolean;
-    const xDown: boolean;
-    const mousePressed: boolean;
-    const mouseReleased: boolean;
-    const mouseDown: boolean;
-    const mouseX: number;
-    const mouseY: number;
+    var up: boolean;
+    var down: boolean;
+    var left: boolean;
+    var right: boolean;
+    var start: boolean;
+    var pause: boolean;
+    var space: boolean;
+    var z: boolean;
+    var x: boolean;
+    var upPressed: boolean;
+    var downPressed: boolean;
+    var leftPressed: boolean;
+    var rightPressed: boolean;
+    var startPressed: boolean;
+    var pausePressed: boolean;
+    var spacePressed: boolean;
+    var zPressed: boolean;
+    var xPressed: boolean;
+    var upReleased: boolean;
+    var downReleased: boolean;
+    var leftReleased: boolean;
+    var rightReleased: boolean;
+    var startReleased: boolean;
+    var pauseReleased: boolean;
+    var spaceReleased: boolean;
+    var zReleased: boolean;
+    var xReleased: boolean;
+    var mousePressed: boolean;
+    var mouseDown: boolean;
+    var mouseReleased: boolean;
+    var mouseX: number;
+    var mouseY: number;
 }

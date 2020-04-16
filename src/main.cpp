@@ -7,12 +7,14 @@
 #include <emscripten/emscripten.h>
 #endif
 
+static const char* script_path = "main.js";
+
 void UpdateDrawFrame() {
   GetContext()->Update();
 }
 
 static bool run() {
-  JsRuntimeHolder js("main.js");
+  JsRuntimeHolder js(script_path);
   Context ctx{};
   SetContext(&ctx);
 
@@ -27,7 +29,11 @@ static bool run() {
   return !GetContext()->ShouldExit();
 }
 
-int main() {
+int main(int argc, char** argv) {
+  if (argc > 1) {
+    script_path = argv[1];
+  }
+
   // Infinite loop of restarts
   while (run())
     ;

@@ -1,12 +1,14 @@
-const SceneManager = require('scene_manager');
+var SceneManager = require('scene_manager');
 
-const PrismaScene = require('prisma');
-const MouseScene = require('mouse');
-const PaletteScene = require('palette');
-const RandomLinesScene = require('random_lines');
-const ButtonScene = require('button');
+var PrismaScene = require('prisma');
+var MouseScene = require('mouse');
+var PaletteScene = require('palette');
+var RandomLinesScene = require('random_lines');
+var ButtonScene = require('button');
+var LunarScene = require('lunar');
 
-const sceneManager = new SceneManager([
+var sceneManager = new SceneManager([
+    new LunarScene(),
     new ButtonScene(),
     new PrismaScene(),
     new PaletteScene(),

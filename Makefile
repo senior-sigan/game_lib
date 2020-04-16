@@ -31,3 +31,6 @@ vendor_zip:
 
 vendor_unzip:
 	unzip vendor.zip
+
+run_game:
+	cd examples; ../cmake-build-debug/fantasy_console lunar.js

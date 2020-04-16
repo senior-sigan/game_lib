@@ -133,7 +133,7 @@ static const struct {
     {js_DrawRectFill, 5, "draw_rect_fill"},
     {js_DrawRect, 5, "draw_rect"},
     {js_GetPixel, 2, "get_pixel"},
-    {js_SetPixel, 3, "set_pixel"},
+    {js_SetPixel, 3, "draw_pixel"},
     {js_DrawClearScreen, 1, "draw_clear_screen"},
     {js_DrawLine, 5, "draw_line"},
     {js_DrawCircle, 4, "draw_circle"},
