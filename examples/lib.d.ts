@@ -2,6 +2,8 @@ declare namespace module {
     let exports: any;
 }
 
+declare function require(name: string): object;
+
 declare function draw_clear_screen(number: number): void;
 
 declare function set_pixel(x: number, y: number, number: number): void;
@@ -20,7 +22,7 @@ declare function draw_circle_fill(x: number, y: number, radius: number, number: 
 
 declare function draw_sprite(sprite_id: number, screen_x: number, screen_y: number, sheet_x: number, sheet_y: number, width: number, height: number): void;
 
-declare function show_text(text: string, x: number, y: number, number: number, size: number, spacing: number): void;
+declare function draw_text(text: string, x: number, y: number, number: number, size: number, spacing: number): void;
 
 declare function import_sprite(file_name: string): number;
 

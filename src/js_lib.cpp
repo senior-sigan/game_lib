@@ -107,8 +107,20 @@ static duk_ret_t js_Trace(duk_context *ctx) {
   return 0;
 }
 
-static duk_ret_t js_Reset(duk_context* ctx) {
+static duk_ret_t js_Reset(duk_context *ctx) {
   GetContext()->Reset();
+  return 0;
+}
+
+duk_ret_t js_ShowText(duk_context *ctx) {
+  std::string str = duk_to_string(ctx, 0);
+  auto x = duk_to_int(ctx, 1);
+  auto y = duk_to_int(ctx, 2);
+  auto color = GetDukColor(ctx, 3);
+//  auto size = GetDukInt(ctx, 4, 1);
+//  auto spacing = GetDukInt(ctx, 5, 0);
+  // TODO: add spacing and size support
+  DrawText(str.c_str(), x, y, 0, color);
   return 0;
 }
 
@@ -128,7 +140,7 @@ static const struct {
     {js_DrawCircleFill, 4, "draw_circle_fill"},
     {js_Reset, 0, "reset"},
     //    {js_DrawSprite, 7, "draw_sprite"},
-    //    {js_ShowText, 6, "show_text"},
+    {js_ShowText, 6, "draw_text"},
     //    {js_ImportMusic, 2, "importMusic"},
     //    {js_ImportSFX, 2, "importSFX"},
     //    {js_PlayMusic, 2, "playMusic"},

@@ -4,15 +4,16 @@ const PrismaScene = require('prisma');
 const MouseScene = require('mouse');
 const PaletteScene = require('palette');
 const RandomLinesScene = require('random_lines');
+const ButtonScene = require('button');
 
 const sceneManager = new SceneManager([
+    new ButtonScene(),
     new PrismaScene(),
     new PaletteScene(),
     // new NativeHelloWorld(),
     // new SoundScene(),
     new RandomLinesScene(),
     new MouseScene(),
-    // new ButtonsScene(),
 ]);
 
 function init() {

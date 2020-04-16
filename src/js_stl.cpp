@@ -2,26 +2,13 @@
 
 #include <duk_module_node.h>
 #include <duktape.h>
-
-#include <iostream>
-
 #include "duk_helpers.hpp"
-
-static duk_ret_t native_print(duk_context *ctx) {
-  duk_push_string(ctx, " ");
-  duk_insert(ctx, 0);
-  duk_join(ctx, duk_get_top(ctx) - 1);
-
-  std::cout << duk_safe_to_string(ctx, -1) << '\n';
-
-  return 0;
-}
 
 static const struct {
   duk_c_function func;
   int params;
   const char *name;
-} ApiFunc[] = {{native_print, DUK_VARARGS, "print"}};
+} ApiFunc[] = {};
 
 static duk_ret_t cb_resolve_module(duk_context *ctx) {
   const char *module_id;
