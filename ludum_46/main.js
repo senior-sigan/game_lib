@@ -119,7 +119,7 @@ Human.prototype._handleTemperature = function () {
         this.temperature = this.minTemperature
     }
 
-    trace(this.temperature, diff);
+    // trace(this.temperature, diff);
 }
 
 Human.prototype.update = function () {
