@@ -4,8 +4,6 @@
 
 #include <algorithm>
 
-#include "js_runtime.hpp"
-
 static constexpr Vector2 ZeroVector2{0, 0};
 
 static Vector2 ClampValue(Vector2 value, Vector2 min, Vector2 max) {
@@ -31,7 +29,7 @@ void Context::UpdateDestRect() {
   };
 }
 
-void Context::Init(JsRuntimeHolder* runtime) {
+void Context::Init(IRuntime* runtime) {
   runtime_ = runtime;
   runtime_->OnInit();
 
@@ -82,3 +80,9 @@ Context::~Context() {
 void Context::Reset() {
   should_stop_ = true;
 }
+Color Context::GetColor(int idx) const {
+  return palette.at(idx % palette.size());
+}
+Context::Context(int canvas_width, int canvas_height, const std::map<std::string, KeyboardKey>& keys,
+                 const std::vector<Color>& palette)
+    : canvas_width_(canvas_width), canvas_height_(canvas_height), keys(keys), palette(palette) {}

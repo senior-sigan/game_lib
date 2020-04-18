@@ -3,27 +3,12 @@
 #include <duktape.h>
 #include <raylib.h>
 
-#include <iostream>
-#include <map>
-
 #include "context.hpp"
 #include "duk_helpers.hpp"
 
-constexpr int PALETTE_LEN = 16;
-constexpr Color PALETTE[PALETTE_LEN] = {
-    Color{0, 0, 0, 255},      Color{29, 43, 83, 255},    Color{126, 37, 83, 255},   Color{0, 135, 81, 255},
-    Color{171, 82, 54, 255},  Color{95, 87, 79, 255},    Color{194, 195, 199, 255}, Color{255, 241, 232, 255},
-    Color{255, 0, 77, 255},   Color{255, 163, 0, 255},   Color{255, 240, 36, 255},  Color{0, 231, 86, 255},
-    Color{41, 173, 255, 255}, Color{131, 118, 156, 255}, Color{255, 119, 168, 255}, Color{255, 204, 170, 255}};
-
-const std::map<std::string, int> keys{{"up", KEY_UP},       {"down", KEY_DOWN},   {"left", KEY_LEFT},
-                                      {"right", KEY_RIGHT}, {"start", KEY_ENTER}, {"pause", KEY_P},
-                                      {"space", KEY_SPACE}, {"z", KEY_Z},         {"x", KEY_X}};
-
 Color GetDukColor(duk_context *ctx, int idx) {
   auto colorIdx = duk_to_int(ctx, idx);
-  auto color = PALETTE[colorIdx % PALETTE_LEN];
-  return color;
+  return GetContext()->GetColor(colorIdx);
 }
 
 duk_ret_t js_SetPixel(duk_context *ctx) {
@@ -57,7 +42,7 @@ duk_ret_t js_DrawLine(duk_context *ctx) {
 }
 
 void SetupPaletteConst(duk_context *ctx) {
-  RegisterConstant(ctx, "PALETTE_LEN", PALETTE_LEN);
+  RegisterConstant(ctx, "PALETTE_LEN", GetContext()->palette_len());
 }
 
 duk_ret_t js_DrawRectFill(duk_context *ctx) {
@@ -117,8 +102,8 @@ duk_ret_t js_ShowText(duk_context *ctx) {
   auto x = duk_to_int(ctx, 1);
   auto y = duk_to_int(ctx, 2);
   auto color = GetDukColor(ctx, 3);
-//  auto size = GetDukInt(ctx, 4, 1);
-//  auto spacing = GetDukInt(ctx, 5, 0);
+  //  auto size = GetDukInt(ctx, 4, 1);
+  //  auto spacing = GetDukInt(ctx, 5, 0);
   // TODO: add spacing and size support
   DrawText(str.c_str(), x, y, 0, color);
   return 0;
@@ -149,7 +134,7 @@ static const struct {
 
 static void RegisterInputs(duk_context *ctx) {
   auto idx = duk_push_object(ctx);
-  for (auto &key : keys) {
+  for (auto &key : GetContext()->keys) {
     if (IsKeyDown(key.second)) {
       duk_push_boolean(ctx, true);
       duk_put_prop_string(ctx, idx, key.first.c_str());
@@ -197,8 +182,8 @@ void RegisterJsLib(duk_context *ctx) {
   }
 
   SetupPaletteConst(ctx);
-  RegisterConstant(ctx, "DISPLAY_HEIGHT", 136);
-  RegisterConstant(ctx, "DISPLAY_WIDTH", 240);
+  RegisterConstant(ctx, "DISPLAY_HEIGHT", GetContext()->canvas_height());
+  RegisterConstant(ctx, "DISPLAY_WIDTH", GetContext()->canvas_width());
   OnUpdateJsLib(ctx);
 }
 

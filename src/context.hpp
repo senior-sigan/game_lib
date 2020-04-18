@@ -2,21 +2,41 @@
 
 #include <raylib.h>
 
+#include <vector>
+#include <map>
 #include <memory>
+#include <string>
 
-class JsRuntimeHolder;
+#include "core/i_runtime.hpp"
 
 class Context {
-  const int canvas_width_ = 240;
-  const int canvas_height_ = 136;
   bool should_stop_ = false;
-  JsRuntimeHolder* runtime_{};
+  IRuntime* runtime_{};
   Rectangle canvasField_{};
   Rectangle dest_rect_{};
   float scale_ = 1.0f;
   RenderTexture2D canvas_{};
 
   void UpdateDestRect();
+
+ public:
+  const int canvas_width_;
+  const int canvas_height_;
+  const std::map<std::string, KeyboardKey> keys;
+  const std::vector<Color> palette;
+  Context(int canvas_width, int canvas_height, const std::map<std::string, KeyboardKey>& keys,
+          const std::vector<Color>& palette);
+
+  void Init(IRuntime* runtime);
+  void Update();
+  void Reset();
+  ~Context();
+
+  [[nodiscard]] Color GetColor(int idx) const;
+
+  [[nodiscard]] int palette_len() const {
+    return palette.size();
+  }
 
   [[nodiscard]] float canvas_height() const {
     return static_cast<float>(canvas_height_);
@@ -25,12 +45,6 @@ class Context {
   [[nodiscard]] float canvas_width() const {
     return static_cast<float>(canvas_width_);
   }
-
- public:
-  void Init(JsRuntimeHolder* runtime);
-  void Update();
-  void Reset();
-  ~Context();
 
   // ShouldStop returns true if user decided to restart cartridge
   [[nodiscard]] bool ShouldStop() const;
