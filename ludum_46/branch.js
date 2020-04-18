@@ -14,7 +14,7 @@ Branch.prototype.update = function () {
 }
 
 Branch.prototype.draw = function () {
-    utils.drawSprite(this.sprite, this.x, this.y);
+    draw_sprite(this.sprite, this.x, this.y);
 }
 
 module.exports = Branch;

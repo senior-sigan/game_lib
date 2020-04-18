@@ -109,6 +109,20 @@ duk_ret_t js_ShowText(duk_context *ctx) {
   return 0;
 }
 
+duk_ret_t js_DrawSprite(duk_context *ctx) {
+  auto idx = duk_to_int(ctx, 0);
+  auto x = duk_to_int(ctx, 1);
+  auto y = duk_to_int(ctx, 2);
+  auto sprite = GetContext()->GetSpriteSheet()->GetSprite(idx);
+  DrawTexture(sprite, x, y, WHITE);
+  return 0;
+}
+
+duk_ret_t js_GetFPS(duk_context *ctx) {
+  duk_push_int(ctx, GetFPS());
+  return 1;
+}
+
 static const struct {
   duk_c_function func;
   int params;
@@ -124,8 +138,9 @@ static const struct {
     {js_DrawCircle, 4, "draw_circle"},
     {js_DrawCircleFill, 4, "draw_circle_fill"},
     {js_Reset, 0, "reset"},
-    //    {js_DrawSprite, 7, "draw_sprite"},
+    {js_DrawSprite, 7, "draw_sprite"},
     {js_ShowText, 6, "draw_text"},
+    {js_GetFPS, 0, "getFPS"},
     //    {js_ImportMusic, 2, "importMusic"},
     //    {js_ImportSFX, 2, "importSFX"},
     //    {js_PlayMusic, 2, "playMusic"},

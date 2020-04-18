@@ -21,7 +21,8 @@ function Human(x, y, inventory) {
 }
 
 Human.prototype.draw = function () {
-    utils.drawSprite(sprites.boy, this.x, this.y);
+    // utils.drawSprite(sprites.boy, this.x, this.y);
+    draw_sprite(0, this.x , this.y);
 
     // if (this.closestFire) {
     //     draw_line(state.human.x, state.human.y, this.closestFire.ws.x, this.closestFire.ws.y, 8);

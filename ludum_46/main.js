@@ -1,5 +1,4 @@
 var utils = require('utils');
-var sprites = require('sprites');
 var CampFire = require('camp_fire');
 var Inventory = require('inventory');
 var Human = require('human');
@@ -39,7 +38,7 @@ function generateBranches() {
     for (var i = 0; i < 128 / 8; i++) {
         for (var j = 0; j < 128 / 8; j++) {
             if (utils.randint(0, 16) !== 0) continue;
-            var sprite = utils.randChoice(sprites.branches);
+            var sprite = utils.randChoice([3, 4, 5]);
             var branch = new Branch(i * 8, j * 8, sprite)
             branches[branch._id] = branch;
         }
@@ -71,11 +70,11 @@ state = {
 
 function drawHud() {
     draw_rect_fill(0, 100, 128, 28, 0);
-    draw_text("Temperature: " + state.human.temperature.toFixed(), 0, 110, 4)
+    draw_text("Temp: " + state.human.temperature.toFixed(), 0, 110, 4)
 
     state.human.canGather.forEach(function (obj, i) {
         draw_rect(64 + i * obj.width + 2 - 1, 109, obj.width + 2, obj.height + 2, 1);
-        utils.drawSprite(obj.sprite, 64 + i * obj.width + 2, 110);
+        draw_sprite(obj.sprite, 64 + i * obj.width + 2, 110);
     })
 }
 
@@ -92,7 +91,7 @@ function drawInventory() {
 
     var maxPerLine = 6;
     var offset = 2;
-    var size = maxPerLine*(8 + 2* offset) - offset;
+    var size = maxPerLine * (8 + 2 * offset) - offset;
 
     draw_rect_fill(posX, posY, size, size, 0);
     draw_rect(posX, posY, size, size, 5);
@@ -103,7 +102,7 @@ function drawInventory() {
 
         var x = posX + i * (8 + offset + offset);
         var y = posY + j * (8 + offset + offset);
-        utils.drawSprite(value.sprite, x + offset / 2, y + offset / 2);
+        draw_sprite(value.sprite, x + offset / 2, y + offset / 2);
         draw_rect(x, y, 8 + offset, 8 + offset, 5);
     });
 }
@@ -141,4 +140,5 @@ function draw() {
     })
     drawHud();
     drawInventory();
+    draw_text(""+ getFPS(), 116,0, 10);
 }

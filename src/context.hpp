@@ -8,6 +8,7 @@
 #include <string>
 
 #include "core/i_runtime.hpp"
+#include "core/sprite_sheet.hpp"
 
 class Context {
   bool should_stop_ = false;
@@ -16,6 +17,7 @@ class Context {
   Rectangle dest_rect_{};
   float scale_ = 1.0f;
   RenderTexture2D canvas_{};
+  SpriteSheet sprites{};
 
   void UpdateDestRect();
 
@@ -31,6 +33,10 @@ class Context {
   void Update();
   void Reset();
   ~Context();
+
+  SpriteSheet* GetSpriteSheet() {
+    return &sprites;
+  }
 
   [[nodiscard]] Color GetColor(int idx) const;
 
