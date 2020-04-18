@@ -1,16 +1,4 @@
-function _build_id_generator() {
-    var _ID_ = 0;
-    return function () {
-        _ID_++;
-        return _ID_;
-    }
-}
-
-var nextID = _build_id_generator();
-
 var utils = require('utils');
-Math.randint = utils.randint;
-
 var sprites = require('sprites');
 var CampFire = require('camp_fire');
 var Inventory = require('inventory');
@@ -50,7 +38,7 @@ function generateBranches() {
     var branches = {};
     for (var i = 0; i < 128 / 8; i++) {
         for (var j = 0; j < 128 / 8; j++) {
-            if (Math.randint(0, 16) !== 0) continue;
+            if (utils.randint(0, 16) !== 0) continue;
             var sprite = utils.randChoice(sprites.branches);
             var branch = new Branch(i * 8, j * 8, sprite)
             branches[branch._id] = branch;
@@ -63,7 +51,7 @@ function generateGrass() {
     var grass = []
     for (var i = 0; i < 128 / 8; i++) {
         for (var j = 0; j < 128 / 8; j++) {
-            if (Math.randint(0, 2) !== 0) continue;
+            if (utils.randint(0, 2) !== 0) continue;
             grass.push(new Grass(i * 8, j * 8));
         }
     }
@@ -83,7 +71,7 @@ state = {
 
 function drawHud() {
     draw_rect_fill(0, 100, 128, 28, 0);
-    draw_text("Cold: " + state.human.temperature.toFixed(), 0, 110, 4)
+    draw_text("Temperature: " + state.human.temperature.toFixed(), 0, 110, 4)
 
     state.human.canGather.forEach(function (obj, i) {
         draw_rect(64 + i * obj.width + 2 - 1, 109, obj.width + 2, obj.height + 2, 1);

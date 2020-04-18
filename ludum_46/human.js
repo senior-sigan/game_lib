@@ -1,5 +1,7 @@
+var utils = require('utils');
+
 function Human(x, y, inventory) {
-    this._id = nextID();
+    this._id = utils.nextID();
     this.width = 16;
     this.height = 16;
     this.x = x;
@@ -19,7 +21,7 @@ function Human(x, y, inventory) {
 }
 
 Human.prototype.draw = function () {
-    utils.drawSprite(sprites.boy, this.x - 8, this.y - 8);
+    utils.drawSprite(sprites.boy, this.x, this.y);
 
     // if (this.closestFire) {
     //     draw_line(state.human.x, state.human.y, this.closestFire.ws.x, this.closestFire.ws.y, 8);

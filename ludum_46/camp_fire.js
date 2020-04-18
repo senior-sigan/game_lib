@@ -1,5 +1,7 @@
+var utils = require('utils')
+
 function CampFire(x, y) {
-    this._id = nextID();
+    this._id = utils.nextID();
     this.x = x;
     this.y = y;
     this.width = 16;
@@ -25,8 +27,8 @@ CampFire.prototype.draw = function () {
     for (var i = 0; i < n_imps; i++) {
         var ox = utils.randint(0, 9) - 4;
         var oy = utils.randint(0, 9) - 4;
-        var r = Math.randint(0, 5);
-        var color = Math.randint(0, 2) + 8;
+        var r = utils.randint(0, 5);
+        var color = utils.randint(0, 2) + 8;
         draw_circle_fill(this.x + ox, this.y + oy, r, color);
     }
 

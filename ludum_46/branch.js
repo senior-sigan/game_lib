@@ -1,5 +1,7 @@
+var utils = require('utils');
+
 function Branch(x, y, sprite) {
-    this._id = nextID();
+    this._id = utils.nextID();
     this.x = x;
     this.y = y;
     this.width = 8;

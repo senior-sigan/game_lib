@@ -57,7 +57,16 @@ Animation.prototype.update = function () {
     return this.frames[this.currentFrame];
 }
 
+function _build_id_generator() {
+    var _ID_ = 0;
+    return function () {
+        _ID_++;
+        return _ID_;
+    }
+}
+
 module.exports = {
+    nextID: _build_id_generator(),
     Animation: Animation,
     drawSprite: drawSprite,
     randChoice: randChoice,
