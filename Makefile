@@ -32,5 +32,8 @@ vendor_zip:
 vendor_unzip:
 	unzip vendor.zip
 
-run_game:
+run_examples:
 	cd examples; ../cmake-build-debug/fantasy_console lunar.js
+
+run_game:
+	cd ludum_46; ../cmake-build-debug/fantasy_console main.js
