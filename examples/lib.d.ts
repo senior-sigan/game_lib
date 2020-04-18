@@ -8,8 +8,6 @@ declare function draw_clear_screen(color: number): void;
 
 declare function draw_pixel(x: number, y: number, color: number): void;
 
-declare function get_pixel(x: number, y: number): number;
-
 declare function draw_line(x0: number, y0: number, x1: number, y1: number, color: number): void;
 
 declare function draw_rect_fill(x: number, y: number, w: number, h: number, color: number): void;
@@ -20,25 +18,13 @@ declare function draw_circle(x: number, y: number, radius: number, color: number
 
 declare function draw_circle_fill(x: number, y: number, radius: number, color: number): void;
 
-declare function draw_sprite(sprite_id: number, screen_x: number, screen_y: number, sheet_x: number, sheet_y: number, width: number, height: number): void;
-
 declare function draw_text(text: string, x: number, y: number, color: number, size: number, spacing: number): void;
-
-declare function import_sprite(file_name: string): number;
 
 declare function trace(text: string): void;
 
 declare function exit(): void;
 
 declare function reset(): void;
-
-declare function importMusic(path: string, name: string): void;
-
-declare function importSFX(path: string, name: string): void;
-
-declare function playMusic(name: string, loop: number): void;
-
-declare function playSFX(name: string, loop: number, ticks: number): void;
 
 declare var PALETTE_LEN: number;
 
