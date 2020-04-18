@@ -36,6 +36,11 @@ function forEach(obj, lambda) {
     }
 }
 
+function len(collection) {
+    if (Array.isArray(collection)) return collection.length;
+    return Object.keys(collection).length;
+}
+
 function Animation(frames, animationSpeed, initTime) {
     this.frames = frames;
     this.currentFrame = 0;
@@ -59,5 +64,6 @@ module.exports = {
     randint: randint,
     intersectAABB: intersectAABB,
     distance: distance,
-    forEach: forEach
+    forEach: forEach,
+    len: len
 }

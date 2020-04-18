@@ -26,10 +26,17 @@ function handleGathering() {
     });
 
     if (INPUT.spacePressed && !state.showInventory) {
-        if (this.canGather.length === 0) {
+        if (state.human.canGather.length === 0) {
             // TODO: make sound "Oh-oh"
         } else {
-
+            var id = state.human.canGather[0]._id;
+            var res = state.human.inventory.push(state.branches[id]);
+            if (!res) {
+                // TODO: make sound "Oh-oh-2"
+            } else {
+                state.branches[id] = null;
+                delete state.branches[id];
+            }
         }
     }
 }
@@ -66,7 +73,7 @@ function generateGrass() {
 state = {
     branches: generateBranches(),
     grass: generateGrass(),
-    human: new Human(32, 32, new Inventory(2)),
+    human: new Human(32, 32, new Inventory(4)),
     warmSources: [new CampFire(16, 16)],
     environment: {
         temperature: -20
@@ -95,16 +102,21 @@ function drawInventory() {
     var posX = 16;
     var posY = 16;
 
-    draw_rect_fill(posX, posY, 96, 96, 0);
-    draw_rect(posX, posY, 96, 96, 5);
+    var maxPerLine = 6;
+    var offset = 2;
+    var size = maxPerLine*(8 + 2* offset) - offset;
 
-    var maxPerLine = 8;
+    draw_rect_fill(posX, posY, size, size, 0);
+    draw_rect(posX, posY, size, size, 5);
 
     state.human.inventory.forEach(function (value, key, index) {
         var i = index % maxPerLine;
         var j = Math.floor(index / maxPerLine);
 
-        draw_rect(posX + i * 16, posY + j * 16, 16, 16, 5);
+        var x = posX + i * (8 + offset + offset);
+        var y = posY + j * (8 + offset + offset);
+        utils.drawSprite(value.sprite, x + offset / 2, y + offset / 2);
+        draw_rect(x, y, 8 + offset, 8 + offset, 5);
     });
 }
 
