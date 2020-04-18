@@ -1,13 +1,6 @@
 var sprites = require('sprites');
+var utils = require('draw_utils');
 
-function drawSprite(sprite, x, y) {
-    for (var j = 0; j < sprite.length; j++) {
-        for (var i = 0; i < sprite[j].length; i++) {
-            if (sprite[j][i] === 0) continue; // transparent
-            draw_pixel(x + i, y + j, sprite[j][i]);
-        }
-    }
-}
 
 function distance(x0, y0, x1, y1) {
     return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
@@ -87,7 +80,7 @@ function Human(x, y) {
 }
 
 Human.prototype.draw = function () {
-    drawSprite(sprites.boy, this.x - 8, this.y - 8);
+    utils.drawSprite(sprites.boy, this.x - 8, this.y - 8);
 
     // if (this.closestFire) {
     //     draw_line(state.human.x, state.human.y, this.closestFire.ws.x, this.closestFire.ws.y, 8);
@@ -109,7 +102,7 @@ Human.prototype._handleMovement = function () {
     }
 }
 
-Human.prototype._handleTemperature = function() {
+Human.prototype._handleTemperature = function () {
     var fireTemperature = 0;
     if (!!this.closestFire) {
         var sqDist = Math.pow(this.closestFire.dist / 8, 2) + 0.01;
@@ -132,9 +125,9 @@ Human.prototype._handleTemperature = function() {
 Human.prototype.update = function () {
     this._handleMovement();
 
-    var dists = state.warmSources.map(function(ws) {
-      return {dist: distance(ws.x, ws.y, this.x, this.y), ws: ws};
-    }.bind(this)).sort(function(a, b) {
+    var dists = state.warmSources.map(function (ws) {
+        return {dist: distance(ws.x, ws.y, this.x, this.y), ws: ws};
+    }.bind(this)).sort(function (a, b) {
         return a.dist - b.dist;
     });
 
@@ -147,7 +140,43 @@ Human.prototype.update = function () {
     this._handleTemperature()
 }
 
+function Branch(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
+Branch.prototype.update = function () {
+
+}
+
+Branch.prototype.draw = function () {
+
+}
+
+function Grass(x, y) {
+    this.x = x;
+    this.y = y;
+    this.animation = new utils.Animation(sprites.grass, 0.8, Math.randint(0, 3));
+}
+
+Grass.prototype.draw = function () {
+    var sprite = this.animation.update();
+    utils.drawSprite(sprite, this.x, this.y);
+}
+
+function generateGrass() {
+    var grass = []
+    for (var i = 0; i < 128 / 8; i++) {
+        for (var j = 0; j < 128 / 8; j++) {
+            if (Math.randint(0,2) === 0) continue;
+            grass.push(new Grass(i*8, j*8));
+        }
+    }
+    return grass;
+}
+
 state = {
+    grass: generateGrass(),
     human: new Human(32, 32),
     warmSources: [new CampFire(16, 16)],
     environment: {
@@ -156,7 +185,7 @@ state = {
 };
 
 function drawHud() {
-    draw_rect()
+    draw_rect_fill(0, 100, 128, 28, 0);
     draw_text("Cold: " + state.human.temperature.toFixed(), 0, 110, 4)
 }
 
@@ -178,6 +207,9 @@ function update() {
 
 function draw() {
     draw_clear_screen(0);
+    state.grass.forEach(function (el) {
+        el.draw();
+    });
     state.human.draw();
     state.warmSources.forEach(function (el) {
         el.draw();
