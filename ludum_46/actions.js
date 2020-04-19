@@ -32,7 +32,7 @@ var acts = [
         object: {
             width: 8,
             height: 8,
-            sprite: 10
+            sprite: 11
         },
         make: function (self) {
             trace("Make hummer");
@@ -57,18 +57,11 @@ var acts = [
                 var obj = new Branch(state.human.x, state.human.y);
                 state.gatherable[obj._id] = obj;
             });
-            var utilisedTrees = 0;
-            utils.forEach(self.foundBuildings, function (building) {
-                // TODO: hm it should be more strait-forward?
-                if (utilisedTrees >= 1) {
-                    return;
-                }
-                utilisedTrees += 1;
-                if (building._type === 'trees') {
-                    state.trees[building._id] = null;
-                    delete state.trees[building._id];
-                }
-            })
+            var building = self.foundBuildings[0];
+            if (building._type === 'trees') {
+                state.trees[building._id] = null;
+                delete state.trees[building._id];
+            }
             utilizeItems(self.requires);
         }
     },
@@ -97,7 +90,7 @@ var acts = [
         object: {
             width: 8,
             height: 8,
-            sprite: 11
+            sprite: 12
         },
         make: function (self) {
             trace("set bonfire");
@@ -105,6 +98,25 @@ var acts = [
             var bonfire = new Bonfire(state.human.x, state.human.y);
             state.warmSources.push(bonfire);
 
+            utilizeItems(self.requires);
+        }
+    },
+    {
+        result: {},
+        requires: {branches: 1},
+        requiresBuildings: ['bonfire'],
+        act: 'feed fire',
+        object: {
+            width: 8,
+            height: 8,
+            sprite: 13
+        },
+        make: function(self) {
+            trace("feed bonfire");
+            var b = self.foundBuildings[0];
+            if (b._type === 'bonfire') {
+                b.feed();
+            }
             utilizeItems(self.requires);
         }
     }
@@ -135,7 +147,7 @@ Actions.prototype._handle_actions = function () {
             }
         });
 
-        if (works === utils.len(action.requires) + utils.len(action.requiresBuildings)) {
+        if (works === (utils.len(action.requires) + utils.len(action.requiresBuildings))) {
             // allow action
             self.push(action);
         }

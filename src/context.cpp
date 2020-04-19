@@ -22,7 +22,7 @@ void Context::Init(IRuntime* runtime) {
   int multi = 4;
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   InitWindow(canvas_width_ * multi, canvas_height_ * multi, "Fantasy Console");
-  SetTargetFPS(60);
+  SetTargetFPS(30);
   SetTextureFilter(GetFontDefault().texture, FILTER_POINT);
   canvas_ = new Canvas(canvas_width_ * GetMultiplier(), canvas_height_ * GetMultiplier());
 

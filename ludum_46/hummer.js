@@ -7,7 +7,7 @@ function Hummer(x, y) {
     this.y = y;
     this.width = 8;
     this.height = 8;
-    this.sprite = 10;
+    this.sprite = 11;
 }
 
 Hummer.prototype.update = function () {

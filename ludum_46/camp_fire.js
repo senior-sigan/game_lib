@@ -58,4 +58,8 @@ CampFire.prototype.update = function () {
     }
 }
 
+CampFire.prototype.feed = function() {
+    this.life = this.maxLife;
+}
+
 module.exports = CampFire;

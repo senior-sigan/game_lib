@@ -2,12 +2,13 @@ var utils = require('utils');
 
 function Torch(x, y) {
     this._id = utils.nextID();
-    this._type = 'branches';
+    this._type = 'torches';
     this.x = x;
     this.y = y;
     this.width = 8;
     this.height = 8;
     this.sprite = 9;
+    this.animation = new utils.Animation([9, 10], 0.5, Math.random());
 }
 
 Torch.prototype.update = function () {
@@ -15,7 +16,8 @@ Torch.prototype.update = function () {
 }
 
 Torch.prototype.draw = function () {
-    draw_sprite(this.sprite, this.x, this.y);
+    var sprite = this.animation.update();
+    draw_sprite(sprite, this.x, this.y);
 }
 
 module.exports = Torch;
