@@ -56,6 +56,8 @@ class Context {
   [[nodiscard]] Vector2 GetVirtualMousePosition() const;
 
   [[nodiscard]] float GetScale() const;
+
+  [[nodiscard]] int GetMultiplier() const;
 };
 
 Context* GetContext();

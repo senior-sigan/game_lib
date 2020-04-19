@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+
 #include "canvas.hpp"
 
 static constexpr Vector2 ZeroVector2{0, 0};
@@ -23,7 +24,7 @@ void Context::Init(IRuntime* runtime) {
   InitWindow(canvas_width_ * multi, canvas_height_ * multi, "Fantasy Console");
   SetTargetFPS(60);
 
-  canvas_ = new Canvas(canvas_width_, canvas_height_);
+  canvas_ = new Canvas(canvas_width_ * GetMultiplier(), canvas_height_ * GetMultiplier());
 
   runtime_ = runtime;
   runtime_->OnInit();
@@ -70,4 +71,7 @@ Context::Context(int canvas_width, int canvas_height, const std::map<std::string
     : canvas_width_(canvas_width), canvas_height_(canvas_height), keys(keys), palette(palette) {}
 float Context::GetScale() const {
   return canvas_->GetScale();
+}
+int Context::GetMultiplier() const {
+  return 4;
 }

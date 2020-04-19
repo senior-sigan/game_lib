@@ -15,15 +15,9 @@ duk_ret_t js_SetPixel(duk_context *ctx) {
   auto x = duk_to_int(ctx, 0);
   auto y = duk_to_int(ctx, 1);
   auto color = GetDukColor(ctx, 2);
-  DrawPixel(x, y, color);
+  auto mul = GetContext()->GetMultiplier();
+  DrawPixel(x * mul, y * mul, color);
   return 0;
-}
-duk_ret_t js_GetPixel(duk_context *ctx) {
-  auto x = duk_to_int(ctx, 0);
-  auto y = duk_to_int(ctx, 1);
-  TraceLog(LOG_ERROR, "GetPixel is not implemented");
-  duk_push_int(ctx, -1);
-  return 1;
 }
 
 duk_ret_t js_DrawClearScreen(duk_context *ctx) {
@@ -37,7 +31,9 @@ duk_ret_t js_DrawLine(duk_context *ctx) {
   auto x1 = duk_to_int(ctx, 2);
   auto y1 = duk_to_int(ctx, 3);
   auto color = GetDukColor(ctx, 4);
-  DrawLine(x0, y0, x1, y1, color);
+  auto mul = GetContext()->GetMultiplier();
+  DrawLineEx({static_cast<float>(x0 * mul), static_cast<float>(y0 * mul)},
+             {static_cast<float>(x1 * mul), static_cast<float>(y1 * mul)}, mul, color);
   return 0;
 }
 
@@ -51,8 +47,8 @@ duk_ret_t js_DrawRectFill(duk_context *ctx) {
   auto w = duk_to_int(ctx, 2);
   auto h = duk_to_int(ctx, 3);
   auto color = GetDukColor(ctx, 4);
-
-  DrawRectangle(x, y, w, h, color);
+  auto mul = GetContext()->GetMultiplier();
+  DrawRectangle(x * mul, y * mul, w * mul, h * mul, color);
   return 0;
 }
 duk_ret_t js_DrawRect(duk_context *ctx) {
@@ -61,8 +57,8 @@ duk_ret_t js_DrawRect(duk_context *ctx) {
   auto w = duk_to_int(ctx, 2);
   auto h = duk_to_int(ctx, 3);
   auto color = GetDukColor(ctx, 4);
-
-  DrawRectangleLines(x, y, w, h, color);
+  auto mul = GetContext()->GetMultiplier();
+  DrawRectangleLinesEx({static_cast<float>(x * mul), static_cast<float>(y * mul), static_cast<float>(w * mul), static_cast<float>(h * mul)}, mul, color);
   return 0;
 }
 duk_ret_t js_DrawCircle(duk_context *ctx) {
@@ -70,7 +66,8 @@ duk_ret_t js_DrawCircle(duk_context *ctx) {
   auto y = duk_to_int(ctx, 1);
   auto r = duk_to_int(ctx, 2);
   auto color = GetDukColor(ctx, 3);
-  DrawCircleLines(x, y, r, color);
+  auto mul = GetContext()->GetMultiplier();
+  DrawCircleLines(x * mul, y * mul, r * mul, color);
   return 0;
 }
 duk_ret_t js_DrawCircleFill(duk_context *ctx) {
@@ -78,7 +75,9 @@ duk_ret_t js_DrawCircleFill(duk_context *ctx) {
   auto y = duk_to_int(ctx, 1);
   auto r = duk_to_int(ctx, 2);
   auto color = GetDukColor(ctx, 3);
-  DrawCircle(x, y, r, color);
+  auto mul = GetContext()->GetMultiplier();
+  // TODO: fix circle contour thickness
+  DrawCircle(x * mul, y * mul, r * mul, color);
   return 0;
 }
 
@@ -102,10 +101,10 @@ duk_ret_t js_ShowText(duk_context *ctx) {
   auto x = duk_to_int(ctx, 1);
   auto y = duk_to_int(ctx, 2);
   auto color = GetDukColor(ctx, 3);
-  //  auto size = GetDukInt(ctx, 4, 1);
+  auto size = GetDukInt(ctx, 4, 1);
   //  auto spacing = GetDukInt(ctx, 5, 0);
-  // TODO: add spacing and size support
-  DrawText(str.c_str(), x, y, 0, color);
+  auto mul = GetContext()->GetMultiplier();
+  DrawText(str.c_str(), x * mul, y * mul, size, color);
   return 0;
 }
 
@@ -113,8 +112,9 @@ duk_ret_t js_DrawSprite(duk_context *ctx) {
   auto idx = duk_to_int(ctx, 0);
   auto x = duk_to_int(ctx, 1);
   auto y = duk_to_int(ctx, 2);
+  auto mul = GetContext()->GetMultiplier();
   auto sprite = GetContext()->GetSpriteSheet()->GetSprite(idx);
-  DrawTexture(sprite, x, y, WHITE);
+  DrawTextureEx(sprite, {static_cast<float>(x * mul), static_cast<float>(y * mul)}, 0, mul, WHITE);
   return 0;
 }
 
@@ -131,7 +131,6 @@ static const struct {
     {js_Trace, DUK_VARARGS, "trace"},
     {js_DrawRectFill, 5, "draw_rect_fill"},
     {js_DrawRect, 5, "draw_rect"},
-    {js_GetPixel, 2, "get_pixel"},
     {js_SetPixel, 3, "draw_pixel"},
     {js_DrawClearScreen, 1, "draw_clear_screen"},
     {js_DrawLine, 5, "draw_line"},
