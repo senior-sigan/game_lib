@@ -4,6 +4,7 @@ var Inventory = require('inventory');
 var Human = require('human');
 var Grass = require('grass');
 var Branch = require('branch');
+var Tree = require('tree');
 
 function handleGathering() {
     utils.forEach(state.branches, function (branch) {
@@ -57,7 +58,19 @@ function generateGrass() {
     return grass;
 }
 
+function generateTrees() {
+    var trees = []
+    for (var i = 0; i < 128 / Tree.width; i++) {
+        for (var j = 0; j < 128 / Tree.height; j++) {
+            if (utils.randint(0, 8) !== 0) continue;
+            trees.push(new Tree(i * Tree.width, j * Tree.height));
+        }
+    }
+    return trees;
+}
+
 state = {
+    trees: generateTrees(),
     branches: generateBranches(),
     grass: generateGrass(),
     human: new Human(32, 32, new Inventory(4)),
@@ -115,6 +128,9 @@ function update() {
     utils.forEach(state.branches, function (el) {
         el.update();
     });
+    utils.forEach(state.trees, function(el) {
+        el.update();
+    })
     utils.forEach(state.warmSources, function (el) {
         el.update();
     });
@@ -134,6 +150,9 @@ function draw() {
     utils.forEach(state.branches, function (el) {
         el.draw();
     });
+    utils.forEach(state.trees, function(el) {
+        el.draw();
+    })
     state.human.draw();
     utils.forEach(state.warmSources, function (el) {
         el.draw();
