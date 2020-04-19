@@ -41,6 +41,72 @@ void SetupPaletteConst(duk_context *ctx) {
   RegisterConstant(ctx, "PALETTE_LEN", GetContext()->palette_len());
 }
 
+static void SetupKeys(duk_context *ctx) {
+  RegisterConstant(ctx, "KEY_A", KEY_A);
+  RegisterConstant(ctx, "KEY_B", KEY_B);
+  RegisterConstant(ctx, "KEY_C", KEY_C);
+  RegisterConstant(ctx, "KEY_D", KEY_D);
+  RegisterConstant(ctx, "KEY_E", KEY_E);
+  RegisterConstant(ctx, "KEY_F", KEY_F);
+  RegisterConstant(ctx, "KEY_G", KEY_G);
+  RegisterConstant(ctx, "KEY_H", KEY_H);
+  RegisterConstant(ctx, "KEY_I", KEY_I);
+  RegisterConstant(ctx, "KEY_J", KEY_J);
+  RegisterConstant(ctx, "KEY_K", KEY_K);
+  RegisterConstant(ctx, "KEY_L", KEY_L);
+  RegisterConstant(ctx, "KEY_M", KEY_M);
+  RegisterConstant(ctx, "KEY_N", KEY_N);
+  RegisterConstant(ctx, "KEY_O", KEY_O);
+  RegisterConstant(ctx, "KEY_P", KEY_P);
+  RegisterConstant(ctx, "KEY_Q", KEY_Q);
+  RegisterConstant(ctx, "KEY_R", KEY_R);
+  RegisterConstant(ctx, "KEY_S", KEY_S);
+  RegisterConstant(ctx, "KEY_T", KEY_T);
+  RegisterConstant(ctx, "KEY_U", KEY_U);
+  RegisterConstant(ctx, "KEY_V", KEY_V);
+  RegisterConstant(ctx, "KEY_W", KEY_W);
+  RegisterConstant(ctx, "KEY_X", KEY_X);
+  RegisterConstant(ctx, "KEY_Y", KEY_Y);
+  RegisterConstant(ctx, "KEY_Z", KEY_Z);
+  RegisterConstant(ctx, "KEY_0", KEY_ZERO);
+  RegisterConstant(ctx, "KEY_1", KEY_ONE);
+  RegisterConstant(ctx, "KEY_2", KEY_TWO);
+  RegisterConstant(ctx, "KEY_3", KEY_THREE);
+  RegisterConstant(ctx, "KEY_4", KEY_FOUR);
+  RegisterConstant(ctx, "KEY_5", KEY_FIVE);
+  RegisterConstant(ctx, "KEY_6", KEY_SIX);
+  RegisterConstant(ctx, "KEY_7", KEY_SEVEN);
+  RegisterConstant(ctx, "KEY_8", KEY_EIGHT);
+  RegisterConstant(ctx, "KEY_9", KEY_NINE);
+  RegisterConstant(ctx, "KEY_RETURN", KEY_ENTER);
+  RegisterConstant(ctx, "KEY_ESCAPE", KEY_ESCAPE);
+  RegisterConstant(ctx, "KEY_BACKSPACE", KEY_BACKSPACE);
+  RegisterConstant(ctx, "KEY_TAB", KEY_TAB);
+  RegisterConstant(ctx, "KEY_SPACE", KEY_SPACE);
+  RegisterConstant(ctx, "KEY_F1", KEY_F1);
+  RegisterConstant(ctx, "KEY_F2", KEY_F2);
+  RegisterConstant(ctx, "KEY_F3", KEY_F3);
+  RegisterConstant(ctx, "KEY_F4", KEY_F4);
+  RegisterConstant(ctx, "KEY_F5", KEY_F5);
+  RegisterConstant(ctx, "KEY_F6", KEY_F6);
+  RegisterConstant(ctx, "KEY_F7", KEY_F7);
+  RegisterConstant(ctx, "KEY_F8", KEY_F8);
+  RegisterConstant(ctx, "KEY_F9", KEY_F9);
+  RegisterConstant(ctx, "KEY_F10", KEY_F10);
+  RegisterConstant(ctx, "KEY_F11", KEY_F11);
+  RegisterConstant(ctx, "KEY_F12", KEY_F12);
+  RegisterConstant(ctx, "KEY_RIGHT", KEY_RIGHT);
+  RegisterConstant(ctx, "KEY_LEFT", KEY_LEFT);
+  RegisterConstant(ctx, "KEY_DOWN", KEY_DOWN);
+  RegisterConstant(ctx, "KEY_UP", KEY_UP);
+  RegisterConstant(ctx, "KEY_LEFT_CONTROL", KEY_LEFT_CONTROL);
+  RegisterConstant(ctx, "KEY_LSHIFT", KEY_LEFT_SHIFT);
+  RegisterConstant(ctx, "KEY_LEFT_ALT", KEY_LEFT_ALT);
+  RegisterConstant(ctx, "KEY_RIGHT_CONTROL", KEY_RIGHT_CONTROL);
+  RegisterConstant(ctx, "KEY_RSHIFT", KEY_RIGHT_SHIFT);
+  RegisterConstant(ctx, "KEY_RIGHT_ALT", KEY_RIGHT_ALT);
+}
+
 duk_ret_t js_DrawRectFill(duk_context *ctx) {
   auto x = duk_to_int(ctx, 0);
   auto y = duk_to_int(ctx, 1);
@@ -118,6 +184,19 @@ duk_ret_t js_DrawSprite(duk_context *ctx) {
   return 0;
 }
 
+duk_ret_t js_IsButtonPressed(duk_context *ctx) {
+  auto key = duk_to_int(ctx, 0);
+  auto res = IsKeyPressed(key);
+  duk_push_boolean(ctx, res);
+  return 1;
+}
+
+duk_ret_t js_GetKeyPressed(duk_context *ctx) {
+  auto res = GetKeyPressed();
+  duk_push_int(ctx, res);
+  return 1;
+}
+
 duk_ret_t js_GetFPS(duk_context *ctx) {
   duk_push_int(ctx, GetFPS());
   return 1;
@@ -140,6 +219,8 @@ static const struct {
     {js_DrawSprite, 7, "draw_sprite"},
     {js_ShowText, 6, "draw_text"},
     {js_GetFPS, 0, "getFPS"},
+    {js_IsButtonPressed, 1, "isPressed"},
+    {js_GetKeyPressed, 0, "getPressed"}
     //    {js_ImportMusic, 2, "importMusic"},
     //    {js_ImportSFX, 2, "importSFX"},
     //    {js_PlayMusic, 2, "playMusic"},
@@ -196,6 +277,7 @@ void RegisterJsLib(duk_context *ctx) {
   }
 
   SetupPaletteConst(ctx);
+  SetupKeys(ctx);
   RegisterConstant(ctx, "DISPLAY_HEIGHT", GetContext()->canvas_height());
   RegisterConstant(ctx, "DISPLAY_WIDTH", GetContext()->canvas_width());
   OnUpdateJsLib(ctx);
