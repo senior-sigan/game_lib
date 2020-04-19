@@ -203,7 +203,7 @@ Actions.prototype.draw = function () {
         var y = this.posY + (wh.height + 2) * i;
         wh = utils.draw_sprite_with_border(obj.object, this.posX, y);
         var txtOffset = (wh.height - fontSize / 4) / 2;
-        draw_text("" + String.fromCharCode(obj.key) + " " + obj.act, this.posX + wh.width + 2, y + txtOffset, txtColor, fontSize);
+        draw_text("" + String.fromCharCode(obj.key) + ": " + obj.act, this.posX + wh.width + 2, y + txtOffset, txtColor, fontSize);
         i++;
     }.bind(this));
 }

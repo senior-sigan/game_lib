@@ -23,7 +23,10 @@ web_clean:
 web_reload:
 	emcmake cmake -Bcmake-build-web -DPLATFORM=Web
 
-web_build:
+web_clean_js:
+	rm cmake-build-web/fantasy_console.js
+
+web_build: web_reload
 	cmake --build cmake-build-web -j 4
 
 vendor_zip:
