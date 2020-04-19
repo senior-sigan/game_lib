@@ -86,9 +86,10 @@ function generateTrees() {
 }
 
 function State() {
+    this.inventory = new Inventory(9);
     this.trees = generateTrees();
     this.grass = generateGrass();
-    this.human = new Human(32, 32, new Inventory(4));
+    this.human = new Human(32, 32, this.inventory);
     this.warmSources = [new CampFire(16, 16)];
     this.environment = {temperature: -20};
     this.gatherable = utils.concat([
@@ -97,35 +98,6 @@ function State() {
     ]);
     trace(this.gatherable.length);
     this.actions = new Actions();
-}
-
-function drawInventory() {
-    if (!INPUT.z) {
-        state.showInventory = false;
-        return;
-    }
-
-    state.showInventory = true;
-
-    var posX = 16;
-    var posY = 16;
-
-    var maxPerLine = 6;
-    var offset = 2;
-    var size = maxPerLine * (8 + 2 * offset) - offset;
-
-    draw_rect_fill(posX, posY, size, size, 0);
-    draw_rect(posX, posY, size, size, 5);
-
-    state.human.inventory.forEach(function (value, key, index) {
-        var i = index % maxPerLine;
-        var j = Math.floor(index / maxPerLine);
-
-        var x = posX + i * (8 + offset + offset);
-        var y = posY + j * (8 + offset + offset);
-        draw_sprite(value.sprite, x + offset / 2, y + offset / 2);
-        draw_rect(x, y, 8 + offset, 8 + offset, 5);
-    });
 }
 
 function init() {
@@ -148,6 +120,7 @@ function update() {
     state.warmSources = state.warmSources.filter(function (el) {
         return !el.toDelete();
     });
+    state.inventory.update();
 }
 
 function draw_el(el) {
@@ -162,6 +135,6 @@ function draw() {
     state.human.draw();
     utils.forEach(state.warmSources, draw_el)
     state.actions.draw();
-    drawInventory();
+    state.inventory.draw();
     draw_text("" + getFPS(), 116, 0, 10, 0);
 }

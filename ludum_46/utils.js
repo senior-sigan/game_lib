@@ -109,8 +109,10 @@ function _build_id_generator() {
     }
 }
 
-function draw_sprite_with_border(obj, x, y, borderColor) {
-    var offset = 1;
+function draw_sprite_with_border(obj, x, y, offset) {
+    if (!offset) {
+        offset = 1;
+    }
     draw_rect(x, y, obj.width + offset * 2, obj.height + offset * 2, 1);
     draw_sprite(obj.sprite, x + offset, y + offset);
     return {

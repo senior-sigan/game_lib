@@ -29,6 +29,7 @@ var acts = [
         requires: {branches: 1, stones: 1},
         requiresBuildings: [],
         act: 'craft',
+        key: KEY_H,
         object: {
             width: 8,
             height: 8,
@@ -37,8 +38,8 @@ var acts = [
         make: function (self) {
             trace("Make hummer");
             var hummer = new Hummer(state.human.x, state.human.y);
-            state.human.inventory.push(hummer);
             utilizeItems(self.requires);
+            state.human.inventory.push(hummer);
         }
     },
     {
@@ -46,6 +47,7 @@ var acts = [
         requires: {hummers: -1},
         requiresBuildings: ['trees'],
         act: 'chop tree',
+        key: KEY_C,
         object: {
             width: 8,
             height: 8,
@@ -70,6 +72,7 @@ var acts = [
         requires: {branches: 1},
         requiresBuildings: ['bonfire'],
         act: 'craft',
+        key: KEY_T,
         object: {
             width: 8,
             height: 8,
@@ -77,16 +80,16 @@ var acts = [
         },
         make: function (self) {
             trace("make torch");
-            state.human.inventory.push(
-                new Torch(state.human.x, state.human.y));
             utilizeItems(self.requires);
+            state.human.inventory.push(new Torch(state.human.x, state.human.y));
         }
     },
     {
         result: {bonfire: 1},
         requires: {branches: 3, stones: -1},
         requiresBuildings: [],
-        act: 'make fire',
+        act: 'make bonfire',
+        key: KEY_B,
         object: {
             width: 8,
             height: 8,
@@ -106,6 +109,7 @@ var acts = [
         requires: {branches: 1},
         requiresBuildings: ['bonfire'],
         act: 'feed fire',
+        key: KEY_F,
         object: {
             width: 8,
             height: 8,
@@ -164,20 +168,9 @@ function gatherAction(action) {
     }
 }
 
-function throwAction(action) {
-    var obj = action.object;
-
-    var res = state.human.inventory.pop(obj._id);
-    if (res) {
-        obj.x = state.human.x;
-        obj.y = state.human.y;
-        state.gatherable[obj._id] = obj;
-    }
-}
-
 Actions.prototype._handle_keys = function () {
     this.collection.forEach(function (action) {
-        if (isPressed(action.key + KEY_0)) {
+        if (isPressed(action.key)) {
             action.make(action);
         }
     });
@@ -189,14 +182,8 @@ Actions.prototype.update = function () {
         this.push({
             act: 'gather',
             object: obj,
-            make: gatherAction
-        });
-    }.bind(this));
-    utils.forEach(state.human.inventory.container, function (obj) {
-        this.push({
-            act: 'throw',
-            object: obj,
-            make: throwAction
+            make: gatherAction,
+            key: KEY_G
         });
     }.bind(this));
 
@@ -208,11 +195,13 @@ Actions.prototype.draw = function () {
     draw_text("Actions", this.posX, 0, txtColor, fontSizeBig);
 
     var wh = {width: 0, height: 0}
-    this.collection.forEach(function (obj, i) {
+    var i = 0;
+    this.collection.forEach(function (obj) {
         var y = this.posY + (wh.height + 2) * i;
         wh = utils.draw_sprite_with_border(obj.object, this.posX, y);
         var txtOffset = (wh.height - fontSize / 4) / 2;
-        draw_text("" + obj.key + " " + obj.act, this.posX + wh.width + 2, y + txtOffset, txtColor, fontSize);
+        draw_text("" + String.fromCharCode(obj.key) + " " + obj.act, this.posX + wh.width + 2, y + txtOffset, txtColor, fontSize);
+        i++;
     }.bind(this));
 }
 
@@ -225,7 +214,6 @@ Actions.prototype.push = function (action) {
         }
     }
 
-    action.key = this.collection.length;
     this.collection.push(action);
 }
 
