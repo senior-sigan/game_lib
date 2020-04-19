@@ -81,6 +81,7 @@ function findClosestFireTo(obj) {
 
 Human.prototype.update = function () {
     this.canGather = {};
+    this.closeBuildings.length = 0;
     this._handleMovement();
 
     this.closestFire = findClosestFireTo(this);

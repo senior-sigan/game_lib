@@ -1,6 +1,7 @@
 var utils = require('utils');
 var Hummer = require('hummer');
 var Torch = require('torch');
+var Bonfire = require('camp_fire');
 
 var txtColor = 10;
 var fontSizeBig = 30;
@@ -10,7 +11,6 @@ function Actions() {
     this.collection = [];
     this.posX = 130;
     this.posY = 8;
-    this.crafts = PrepareCrafts();
 }
 
 function utilizeItems(requirements) {
@@ -23,74 +23,98 @@ function utilizeItems(requirements) {
     });
 }
 
-function PrepareCrafts() {
-    return [
-        {
-            result: {hummers: 1},
-            requires: {branches: 1, stones: 1},
-            requiresBuildings: [],
-            object: {
-                width: 8,
-                height: 8,
-                sprite: 10,
-                make: function (self) {
-                    trace("Make hummer");
-                    var hummer = new Hummer(state.human.x, state.human.y);
-                    state.gatherable[hummer._id] = hummer;
-                    utilizeItems(self.requires);
-                }
-            }
+var acts = [
+    {
+        result: {hummers: 1},
+        requires: {branches: 1, stones: 1},
+        requiresBuildings: [],
+        act: 'craft',
+        object: {
+            width: 8,
+            height: 8,
+            sprite: 10
         },
-        {
-            result: {branches: 4},
-            requires: {hummers: -1},
-            requiresBuildings: ['trees'],
-            object: {
-                width: 8,
-                height: 8,
-                sprite: utils.randChoice([3, 4, 5]),
-                make: function (self) {
-                    trace("chop tree")
-                    utilizeItems(self.requires);
-                }
-            }
-        },
-        {
-            result: {torch: 1},
-            requires: {branches: 1},
-            requiresBuildings: ['bonfire'],
-            object: {
-                width: 8,
-                height: 8,
-                sprite: 9,
-                make: function (self) {
-                    trace("make torch")
-                    utilizeItems(self.requires);
-                }
-            }
-        },
-        {
-            result: {bonfire: 1},
-            requires: {branches: 3, stones: -1},
-            requiresBuildings: [],
-            object: {
-                width: 8,
-                height: 8,
-                sprite: 11,
-                make: function (self) {
-                    trace("set bonfire");
-                    utilizeItems(self.requires);
-                }
-            }
+        make: function (self) {
+            trace("Make hummer");
+            var hummer = new Hummer(state.human.x, state.human.y);
+            state.human.inventory.push(hummer);
+            utilizeItems(self.requires);
         }
-    ];
-}
+    },
+    {
+        result: {branches: 4},
+        requires: {hummers: -1},
+        requiresBuildings: ['trees'],
+        act: 'chop tree',
+        object: {
+            width: 8,
+            height: 8,
+            sprite: utils.randChoice([3, 4, 5])
+        },
+        make: function (self) {
+            trace("chop tree")
+            utils.forEach(self.result, function(n, name) {
+                var obj = new Branch(state.human.x, state.human.y);
+                state.gatherable[obj._id] = obj;
+            });
+            var utilisedTrees = 0;
+            utils.forEach(self.foundBuildings, function (building) {
+                // TODO: hm it should be more strait-forward?
+                if (utilisedTrees >= 1) {
+                    return;
+                }
+                utilisedTrees += 1;
+                if (building._type === 'trees') {
+                    state.trees[building._id] = null;
+                    delete state.trees[building._id];
+                }
+            })
+            utilizeItems(self.requires);
+        }
+    },
+    {
+        result: {torch: 1},
+        requires: {branches: 1},
+        requiresBuildings: ['bonfire'],
+        act: 'craft',
+        object: {
+            width: 8,
+            height: 8,
+            sprite: 9
+        },
+        make: function (self) {
+            trace("make torch");
+            state.human.inventory.push(
+                new Torch(state.human.x, state.human.y));
+            utilizeItems(self.requires);
+        }
+    },
+    {
+        result: {bonfire: 1},
+        requires: {branches: 3, stones: -1},
+        requiresBuildings: [],
+        act: 'make fire',
+        object: {
+            width: 8,
+            height: 8,
+            sprite: 11
+        },
+        make: function (self) {
+            trace("set bonfire");
 
-Actions.prototype._handle_crafts = function () {
+            var bonfire = new Bonfire(state.human.x, state.human.y);
+            state.warmSources.push(bonfire);
+
+            utilizeItems(self.requires);
+        }
+    }
+];
+
+Actions.prototype._handle_actions = function () {
     var self = this;
-    utils.forEach(this.crafts, function (craft) {
+    utils.forEach(acts, function (action) {
         var works = 0;
-        utils.forEach(craft.requires, function (n, name) {
+        utils.forEach(action.requires, function (n, name) {
             var objs = utils.find(name, state.human.inventory.container, function (obj) {
                 return obj._type;
             });
@@ -99,21 +123,21 @@ Actions.prototype._handle_crafts = function () {
             }
         });
 
-        utils.forEach(craft.requiresBuildings, function(name) {
-           var objs = utils.find(name, state.human.closeBuildings);
-           if (objs.length > 0) {
-               works += 1;
-           }
+        action.foundBuildings = [];
+        utils.forEach(action.requiresBuildings, function (name) {
+            // trace(utils.toJson(action.requiresBuildings), state.human.closeBuildings);
+            var objs = utils.find(name, state.human.closeBuildings, function (obj) {
+                return obj._type;
+            });
+            action.foundBuildings = utils.concat([action.foundBuildings, objs]);
+            if (objs.length > 0) {
+                works += 1;
+            }
         });
 
-        // trace(utils.toJson(craft.result), works, utils.len(craft.requires))
-        if (works === utils.len(craft.requires) + utils.len(craft.requiresBuildings)) {
-            // allow craft
-            self.push({
-                act: 'craft',
-                object: craft.object,
-                craft: craft
-            })
+        if (works === utils.len(action.requires) + utils.len(action.requiresBuildings)) {
+            // allow action
+            self.push(action);
         }
     });
 }
@@ -139,20 +163,10 @@ function throwAction(action) {
     }
 }
 
-function craftAction(action) {
-    action.object.make(action.craft);
-}
-
-var actions = {
-    'gather': gatherAction,
-    'throw': throwAction,
-    'craft': craftAction
-}
-
 Actions.prototype._handle_keys = function () {
     this.collection.forEach(function (action) {
         if (isPressed(action.key + KEY_0)) {
-            actions[action.act](action);
+            action.make(action);
         }
     });
 }
@@ -162,18 +176,19 @@ Actions.prototype.update = function () {
     utils.forEach(state.human.canGather, function (obj) {
         this.push({
             act: 'gather',
-            object: obj
+            object: obj,
+            make: gatherAction
         });
     }.bind(this));
     utils.forEach(state.human.inventory.container, function (obj) {
         this.push({
             act: 'throw',
-            object: obj
+            object: obj,
+            make: throwAction
         });
     }.bind(this));
-    // TODO: handle crafts
-    this._handle_crafts();
 
+    this._handle_actions();
     this._handle_keys();
 }
 
@@ -190,6 +205,14 @@ Actions.prototype.draw = function () {
 }
 
 Actions.prototype.push = function (action) {
+    if (action.act === 'gather') {
+        for (var i = 0; i < this.collection.length; i++) {
+            if(this.collection[i].object._type === action.object._type) {
+                return;
+            }
+        }
+    }
+
     action.key = this.collection.length;
     this.collection.push(action);
 }

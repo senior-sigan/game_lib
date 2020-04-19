@@ -2,6 +2,7 @@ var utils = require('utils')
 
 function Tree(x, y) {
     this._id = utils.nextID();
+    this._type = 'trees';
     this.x = x;
     this.y = y;
     this.width = 16;

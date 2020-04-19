@@ -14,21 +14,29 @@ function handleGathering() {
             state.human.canGather[obj._id] = obj;
         }
     });
+}
 
-    // if (INPUT.spacePressed && !state.showInventory) {
-    //     if (state.human.canGather.length === 0) {
-    //         // TODO: make sound "Oh-oh"
-    //     } else {
-    //         var obj = state.human.canGather[0];
-    //         var res = state.human.inventory.push(state.human.canGather[0]);
-    //         if (!res) {
-    //             // TODO: make sound "Oh-oh-2"
-    //         } else {
-    //             state[obj._type][obj._id] = null;
-    //             delete state[obj._type][obj._id];
-    //         }
-    //     }
-    // }
+function areaRect(obj, offset) {
+    return {
+        x: obj.x - offset,
+        y: obj.y - offset,
+        width: obj.width + offset,
+        height: obj.height + offset
+    }
+}
+
+function handleBuildingCollisions() {
+    utils.forEach(state.warmSources, function (obj) {
+        if (utils.intersectAABB(areaRect(obj, obj.width / 4), state.human)) {
+            state.human.closeBuildings.push(obj);
+        }
+    });
+
+    utils.forEach(state.trees, function (obj) {
+        if (utils.intersectAABB(areaRect(obj, -obj.width / 8), state.human)) {
+            state.human.closeBuildings.push(obj);
+        }
+    });
 }
 
 function generateObjects(factory, size) {
@@ -49,10 +57,9 @@ function generateObjects(factory, size) {
  * @returns {{String, Branch}}
  */
 function generateBranches() {
-    return generateObjects(function(i, j, size) {
+    return generateObjects(function (i, j, size) {
         if (utils.randint(0, 16) !== 0) return null;
-        var sprite = utils.randChoice([3, 4, 5]);
-        return new Branch(i * size, j * size, sprite)
+        return new Branch(i * size, j * size)
     }, 8);
 }
 
@@ -72,14 +79,10 @@ function generateGrass() {
 }
 
 function generateTrees() {
-    var trees = []
-    for (var i = 0; i < 128 / Tree.width; i++) {
-        for (var j = 0; j < 128 / Tree.height; j++) {
-            if (utils.randint(0, 8) !== 0) continue;
-            trees.push(new Tree(i * Tree.width, j * Tree.height));
-        }
-    }
-    return trees;
+    return generateObjects(function(i,j, size) {
+        if (utils.randint(0, 8) !== 0) return;
+        return new Tree(i * size, j * size);
+    }, Tree.width);
 }
 
 function State() {
@@ -138,6 +141,7 @@ function update() {
     utils.forEach(state.trees, updateEl)
     utils.forEach(state.warmSources, updateEl);
     state.human.update();
+    handleBuildingCollisions();
     handleGathering();
     state.actions.update();
 

@@ -2,6 +2,7 @@ var utils = require('utils')
 
 function CampFire(x, y) {
     this._id = utils.nextID();
+    this._type = 'bonfire';
     this.x = x;
     this.y = y;
     this.width = 16;

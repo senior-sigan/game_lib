@@ -17,14 +17,18 @@ function intersectAABB(rect1, rect2) {
         rect1.y + rect1.height > rect2.y;
 }
 
-function forEach(obj, lambda) {
-    if (Array.isArray(obj)) {
-        obj.forEach(lambda);
-    } else {
-        Object.keys(obj).forEach(function (key, index) {
-            lambda(obj[key], key, index);
-        });
+function forEach(collection, lambda) {
+    if (Array.isArray(collection)) {
+        collection.forEach(lambda);
+        return;
     }
+    if (isObject(collection)){
+        Object.keys(collection).forEach(function (key, index) {
+            lambda(collection[key], key, index);
+        });
+        return;
+    }
+    trace("WARNING: forEach over type ", typeof(collection));
 }
 
 function find(what, collection, key) {
@@ -49,21 +53,29 @@ function findOne(collection, predicate) {
                 return collection[i];
             }
         }
-    } else {
+        return;
+    }
+    if (isObject(collection)) {
         var keys = Object.keys(collection);
         for (var i = 0; i <keys.length; i++) {
             if (predicate(collection[keys[i]])) {
                 return collection[keys[i]];
             }
         }
+        return;
     }
+    trace("WARNING: findOne over type ", typeof(collection));
+}
+
+function isObject(test) {
+    return typeof(test) === 'object'
 }
 
 function toJson(object) {
     var str = "";
     forEach(object, function (value, key) {
-        str += key + ": " + value;
-    })
+        str += key + ": " + value + ", ";
+    });
 
     return '{' + str + '}';
 }

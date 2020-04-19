@@ -1,6 +1,6 @@
 var utils = require('utils');
 
-function Torch(x, y, sprite) {
+function Torch(x, y) {
     this._id = utils.nextID();
     this._type = 'branches';
     this.x = x;
