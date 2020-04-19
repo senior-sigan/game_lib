@@ -3,6 +3,7 @@
 #include <raylib.h>
 
 #include <algorithm>
+#include <cmath>
 
 static constexpr Vector2 ZeroVector2{0, 0};
 
@@ -20,7 +21,7 @@ void Context::UpdateDestRect() {
   auto ch = static_cast<float>(canvas_height_);
   auto sw = static_cast<float>(GetScreenWidth());
   auto sh = static_cast<float>(GetScreenHeight());
-  scale_ = std::min(sw / cw, sw / ch);
+  scale_ = std::min(sw / cw, sh / ch);
   dest_rect_ = Rectangle{
       (sw - cw * scale_) * 0.5f,
       (sh - ch * scale_) * 0.5f,
@@ -34,6 +35,7 @@ void Context::Init(IRuntime* runtime) {
   runtime_->OnInit();
 
   int multi = 4;
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   InitWindow(canvas_width_ * multi, canvas_height_ * multi, "Fantasy Console");
   SetTargetFPS(60);
 
