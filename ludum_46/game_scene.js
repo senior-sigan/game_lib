@@ -96,11 +96,8 @@ function State() {
         generateStones(),
         generateBranches()
     ]);
-    trace(this.gatherable.length);
     this.actions = new Actions();
 }
-
-state = null;
 
 function GameScene() {
 

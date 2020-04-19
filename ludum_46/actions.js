@@ -57,8 +57,10 @@ var acts = [
         make: function (self) {
             trace("chop tree")
             utils.forEach(self.result, function(n, name) {
-                var obj = new Branch(state.human.x, state.human.y);
-                state.gatherable[obj._id] = obj;
+                for (var i = 0; i < n; i++) {
+                    var obj = new Branch(state.human.x, state.human.y);
+                    state.gatherable[obj._id] = obj;
+                }
             });
             var building = self.foundBuildings[0];
             if (building._type === 'trees') {
