@@ -56,6 +56,16 @@ function _build_id_generator() {
     }
 }
 
+function draw_sprite_with_border(obj, x, y, borderColor) {
+    var offset = 1;
+    draw_rect(x, y, obj.width + offset * 2, obj.height + offset * 2, 1);
+    draw_sprite(obj.sprite, x + offset, y + offset);
+    return {
+        width: obj.width + offset * 2,
+        height: obj.height + offset * 2
+    }
+}
+
 module.exports = {
     nextID: _build_id_generator(),
     Animation: Animation,
@@ -64,5 +74,6 @@ module.exports = {
     intersectAABB: intersectAABB,
     distance: distance,
     forEach: forEach,
-    len: len
+    len: len,
+    draw_sprite_with_border: draw_sprite_with_border
 }

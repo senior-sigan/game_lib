@@ -21,8 +21,4 @@ Inventory.prototype.pop = function (_id) {
     return obj;
 }
 
-Inventory.prototype.forEach = function(lambda) {
-    utils.forEach(this.container, lambda);
-}
-
 module.exports = Inventory;

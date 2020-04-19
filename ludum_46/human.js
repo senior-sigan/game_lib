@@ -16,7 +16,7 @@ function Human(x, y, inventory) {
 
     this.temperature = this.normTemperature;
 
-    this.canGather = [];
+    this.canGather = {};
     this.inventory = inventory;
 }
 
@@ -79,7 +79,7 @@ function findClosestFireTo(obj) {
 }
 
 Human.prototype.update = function () {
-    this.canGather.length = 0;
+    this.canGather = {};
     this._handleMovement();
 
     this.closestFire = findClosestFireTo(this);

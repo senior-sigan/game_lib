@@ -6,30 +6,31 @@ var Grass = require('grass');
 var Branch = require('branch');
 var Tree = require('tree');
 var Stone = require('stone');
+var Actions = require('actions');
 
 function handleGathering() {
     utils.forEach(state.gatherable, function (collection) {
         utils.forEach(collection, function (obj) {
             if (utils.intersectAABB(obj, state.human)) {
-                state.human.canGather.push(obj);
+                state.human.canGather[obj._id] = obj;
             }
         });
     });
 
-    if (INPUT.spacePressed && !state.showInventory) {
-        if (state.human.canGather.length === 0) {
-            // TODO: make sound "Oh-oh"
-        } else {
-            var obj = state.human.canGather[0];
-            var res = state.human.inventory.push(state.human.canGather[0]);
-            if (!res) {
-                // TODO: make sound "Oh-oh-2"
-            } else {
-                state[obj._type][obj._id] = null;
-                delete state[obj._type][obj._id];
-            }
-        }
-    }
+    // if (INPUT.spacePressed && !state.showInventory) {
+    //     if (state.human.canGather.length === 0) {
+    //         // TODO: make sound "Oh-oh"
+    //     } else {
+    //         var obj = state.human.canGather[0];
+    //         var res = state.human.inventory.push(state.human.canGather[0]);
+    //         if (!res) {
+    //             // TODO: make sound "Oh-oh-2"
+    //         } else {
+    //             state[obj._type][obj._id] = null;
+    //             delete state[obj._type][obj._id];
+    //         }
+    //     }
+    // }
 }
 
 function generateObjects(factory, size) {
@@ -50,17 +51,11 @@ function generateObjects(factory, size) {
  * @returns {{String, Branch}}
  */
 function generateBranches() {
-    // Maybe spawn them near to trees???
-    var branches = {};
-    for (var i = 0; i < 128 / 8; i++) {
-        for (var j = 0; j < 128 / 8; j++) {
-            if (utils.randint(0, 16) !== 0) continue;
-            var sprite = utils.randChoice([3, 4, 5]);
-            var branch = new Branch(i * 8, j * 8, sprite)
-            branches[branch._id] = branch;
-        }
-    }
-    return branches;
+    return generateObjects(function(i, j, size) {
+        if (utils.randint(0, 16) !== 0) return null;
+        var sprite = utils.randChoice([3, 4, 5]);
+        return new Branch(i * size, j * size, sprite)
+    }, 8);
 }
 
 function generateStones() {
@@ -98,30 +93,9 @@ function State() {
     this.warmSources = [new CampFire(16, 16)];
     this.environment = {temperature: -20};
     this.showInventory = false;
+    this.actions = new Actions();
 
     this.gatherable = [this.stones, this.branches];
-}
-
-function draw_sprite_with_border(obj, x, y, borderColor) {
-    var offset = 1;
-    draw_rect(x, y, obj.width + offset * 2, obj.height + offset * 2, 1);
-    draw_sprite(obj.sprite, x + offset, y + offset);
-    return {
-        width: obj.width + offset * 2,
-        height: obj.height + offset * 2
-    }
-}
-
-function drawHud() {
-    var posX = 132;
-    var posY = 100;
-    // draw_rect_fill(0, 100, 128, 28, 0);
-    // draw_text("Temp: " + state.human.temperature.toFixed(), 0, 110, 4)
-
-    var wh = {width: 0, height:0}
-    state.human.canGather.forEach(function (obj, i) {
-        wh = draw_sprite_with_border(obj, posX + (wh.width +2) * i, posY);
-    })
 }
 
 function drawInventory() {
@@ -169,6 +143,7 @@ function update() {
     });
     state.human.update();
     handleGathering();
+    state.actions.update();
 
     state.warmSources = state.warmSources.filter(function (el) {
         return !el.toDelete();
@@ -187,7 +162,7 @@ function draw() {
     utils.forEach(state.trees, draw_el);
     state.human.draw();
     utils.forEach(state.warmSources, draw_el)
-    drawHud();
+    state.actions.draw();
     drawInventory();
-    draw_text("" + getFPS(), 116, 0, 10);
+    draw_text("" + getFPS(), 116, 0, 10, 0);
 }
