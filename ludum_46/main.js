@@ -8,12 +8,12 @@ var Tree = require('tree');
 var Stone = require('stone');
 
 function handleGathering() {
-    utils.forEach(state.gatherable, function(collection) {
-       utils.forEach(collection, function(obj) {
-           if (utils.intersectAABB(obj, state.human)) {
-               state.human.canGather.push(obj);
-           }
-       });
+    utils.forEach(state.gatherable, function (collection) {
+        utils.forEach(collection, function (obj) {
+            if (utils.intersectAABB(obj, state.human)) {
+                state.human.canGather.push(obj);
+            }
+        });
     });
 
     if (INPUT.spacePressed && !state.showInventory) {
@@ -102,13 +102,25 @@ function State() {
     this.gatherable = [this.stones, this.branches];
 }
 
-function drawHud() {
-    draw_rect_fill(0, 100, 128, 28, 0);
-    draw_text("Temp: " + state.human.temperature.toFixed(), 0, 110, 4)
+function draw_sprite_with_border(obj, x, y, borderColor) {
+    var offset = 1;
+    draw_rect(x, y, obj.width + offset * 2, obj.height + offset * 2, 1);
+    draw_sprite(obj.sprite, x + offset, y + offset);
+    return {
+        width: obj.width + offset * 2,
+        height: obj.height + offset * 2
+    }
+}
 
+function drawHud() {
+    var posX = 132;
+    var posY = 100;
+    // draw_rect_fill(0, 100, 128, 28, 0);
+    // draw_text("Temp: " + state.human.temperature.toFixed(), 0, 110, 4)
+
+    var wh = {width: 0, height:0}
     state.human.canGather.forEach(function (obj, i) {
-        draw_rect(64 + i * obj.width + 2 - 1, 109, obj.width + 2, obj.height + 2, 1);
-        draw_sprite(obj.sprite, 64 + i * obj.width + 2, 110);
+        wh = draw_sprite_with_border(obj, posX + (wh.width +2) * i, posY);
     })
 }
 
