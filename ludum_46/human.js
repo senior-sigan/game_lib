@@ -18,6 +18,7 @@ function Human(x, y, inventory) {
 
     this.canGather = {};
     this.inventory = inventory;
+    this.closeBuildings = [];
 }
 
 Human.prototype.draw = function () {

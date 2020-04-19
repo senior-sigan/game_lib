@@ -42,6 +42,23 @@ function find(what, collection, key) {
     return res;
 }
 
+function findOne(collection, predicate) {
+    if (Array.isArray(collection)) {
+        for (var i = 0; i < collection.length; i++) {
+            if (predicate(collection[i])) {
+                return collection[i];
+            }
+        }
+    } else {
+        var keys = Object.keys(collection);
+        for (var i = 0; i <keys.length; i++) {
+            if (predicate(collection[keys[i]])) {
+                return collection[keys[i]];
+            }
+        }
+    }
+}
+
 function toJson(object) {
     var str = "";
     forEach(object, function (value, key) {
@@ -90,6 +107,16 @@ function draw_sprite_with_border(obj, x, y, borderColor) {
     }
 }
 
+function concat(collections) {
+    var res = {};
+    collections.forEach(function(collection) {
+        utils.forEach(collection, function(value, key) {
+           res[key] = value;
+        });
+    });
+    return res;
+}
+
 module.exports = {
     nextID: _build_id_generator(),
     Animation: Animation,
@@ -101,5 +128,7 @@ module.exports = {
     len: len,
     draw_sprite_with_border: draw_sprite_with_border,
     find: find,
-    toJson: toJson
+    findOne: findOne,
+    toJson: toJson,
+    concat: concat
 }

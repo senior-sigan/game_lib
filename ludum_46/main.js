@@ -9,12 +9,10 @@ var Stone = require('stone');
 var Actions = require('actions');
 
 function handleGathering() {
-    utils.forEach(state.gatherable, function (collection) {
-        utils.forEach(collection, function (obj) {
-            if (utils.intersectAABB(obj, state.human)) {
-                state.human.canGather[obj._id] = obj;
-            }
-        });
+    utils.forEach(state.gatherable, function (obj) {
+        if (utils.intersectAABB(obj, state.human)) {
+            state.human.canGather[obj._id] = obj;
+        }
     });
 
     // if (INPUT.spacePressed && !state.showInventory) {
@@ -85,16 +83,17 @@ function generateTrees() {
 }
 
 function State() {
-    this.stones = generateStones();
     this.trees = generateTrees();
-    this.branches = generateBranches();
     this.grass = generateGrass();
     this.human = new Human(32, 32, new Inventory(4));
     this.warmSources = [new CampFire(16, 16)];
     this.environment = {temperature: -20};
-    this.showInventory = false;
-    this.gatherable = [this.stones, this.branches];
-    this.actions = new Actions(['stones', 'trees', 'branches', 'bonfire', 'torches']);
+    this.gatherable = utils.concat([
+        generateStones(),
+        generateBranches()
+    ]);
+    trace(this.gatherable.length);
+    this.actions = new Actions();
 }
 
 function drawInventory() {
@@ -130,16 +129,14 @@ function init() {
     state = new State();
 }
 
+function updateEl(el) {
+    el.update();
+}
+
 function update() {
-    utils.forEach(state.branches, function (el) {
-        el.update();
-    });
-    utils.forEach(state.trees, function (el) {
-        el.update();
-    })
-    utils.forEach(state.warmSources, function (el) {
-        el.update();
-    });
+    utils.forEach(state.gatherable, updateEl);
+    utils.forEach(state.trees, updateEl)
+    utils.forEach(state.warmSources, updateEl);
     state.human.update();
     handleGathering();
     state.actions.update();
@@ -155,10 +152,9 @@ function draw_el(el) {
 
 function draw() {
     draw_clear_screen(0);
-    utils.forEach(state.stones, draw_el);
     utils.forEach(state.grass, draw_el);
-    utils.forEach(state.branches, draw_el);
     utils.forEach(state.trees, draw_el);
+    utils.forEach(state.gatherable, draw_el);
     state.human.draw();
     utils.forEach(state.warmSources, draw_el)
     state.actions.draw();

@@ -21,4 +21,11 @@ Inventory.prototype.pop = function (_id) {
     return obj;
 }
 
+Inventory.prototype.popByType = function(type) {
+    var obj = utils.findOne(this.container, function(obj) {
+        return obj._type === type;
+    });
+    return this.pop(obj._id);
+}
+
 module.exports = Inventory;
