@@ -2,6 +2,7 @@ var utils = require('utils');
 var Hummer = require('hummer');
 var Torch = require('torch');
 var Bonfire = require('camp_fire');
+var Branch = require('branch');
 
 var txtColor = 10;
 var fontSizeBig = 30;

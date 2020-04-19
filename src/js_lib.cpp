@@ -124,7 +124,9 @@ duk_ret_t js_DrawRect(duk_context *ctx) {
   auto h = duk_to_int(ctx, 3);
   auto color = GetDukColor(ctx, 4);
   auto mul = GetContext()->GetMultiplier();
-  DrawRectangleLinesEx({static_cast<float>(x * mul), static_cast<float>(y * mul), static_cast<float>(w * mul), static_cast<float>(h * mul)}, mul, color);
+  DrawRectangleLinesEx({static_cast<float>(x * mul), static_cast<float>(y * mul), static_cast<float>(w * mul),
+                        static_cast<float>(h * mul)},
+                       mul, color);
   return 0;
 }
 duk_ret_t js_DrawCircle(duk_context *ctx) {
@@ -178,9 +180,10 @@ duk_ret_t js_DrawSprite(duk_context *ctx) {
   auto idx = duk_to_int(ctx, 0);
   auto x = duk_to_int(ctx, 1);
   auto y = duk_to_int(ctx, 2);
+  auto scale = GetDukInt(ctx, 3, 1);
   auto mul = GetContext()->GetMultiplier();
   auto sprite = GetContext()->GetSpriteSheet()->GetSprite(idx);
-  DrawTextureEx(sprite, {static_cast<float>(x * mul), static_cast<float>(y * mul)}, 0, mul, WHITE);
+  DrawTextureEx(sprite, {static_cast<float>(x * mul), static_cast<float>(y * mul)}, 0, mul * scale, WHITE);
   return 0;
 }
 

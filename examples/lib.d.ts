@@ -20,7 +20,7 @@ declare function draw_circle_fill(x: number, y: number, radius: number, color: n
 
 declare function draw_text(text: string, x: number, y: number, color: number, size: number): void;
 
-declare function draw_sprite(idx: number, x: number, y: number);
+declare function draw_sprite(idx: number, x: number, y: number, scale?: number);
 
 declare function isPressed(key: number);
 
