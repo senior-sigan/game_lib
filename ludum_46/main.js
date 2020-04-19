@@ -93,9 +93,8 @@ function State() {
     this.warmSources = [new CampFire(16, 16)];
     this.environment = {temperature: -20};
     this.showInventory = false;
-    this.actions = new Actions();
-
     this.gatherable = [this.stones, this.branches];
+    this.actions = new Actions(['stones', 'trees', 'branches', 'bonfire', 'torches']);
 }
 
 function drawInventory() {

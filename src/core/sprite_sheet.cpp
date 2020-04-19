@@ -21,5 +21,9 @@ void SpriteSheet::AddSprite(std::vector<std::vector<int>> sprite) {
   sprites_.push_back(LoadTextureFromImage(image));
 }
 Texture2D SpriteSheet::GetSprite(int idx) const {
-  return sprites_.at(idx);
+  auto i = idx % sprites_.size();
+  if (i != idx) {
+    TraceLog(LOG_WARNING, "GetSprite: id out of range: %d", idx);
+  }
+  return sprites_.at(i);
 }

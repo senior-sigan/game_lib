@@ -27,6 +27,30 @@ function forEach(obj, lambda) {
     }
 }
 
+function find(what, collection, key) {
+    var res = [];
+    if (!key) {
+        key = function(el) {
+            return el;
+        }
+    }
+    forEach(collection, function(value){
+        if (what === key(value)) {
+            res.push(value);
+        }
+    });
+    return res;
+}
+
+function toJson(object) {
+    var str = "";
+    forEach(object, function (value, key) {
+        str += key + ": " + value;
+    })
+
+    return '{' + str + '}';
+}
+
 function len(collection) {
     if (Array.isArray(collection)) return collection.length;
     return Object.keys(collection).length;
@@ -75,5 +99,7 @@ module.exports = {
     distance: distance,
     forEach: forEach,
     len: len,
-    draw_sprite_with_border: draw_sprite_with_border
+    draw_sprite_with_border: draw_sprite_with_border,
+    find: find,
+    toJson: toJson
 }
