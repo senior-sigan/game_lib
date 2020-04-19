@@ -5,28 +5,44 @@ var Human = require('human');
 var Grass = require('grass');
 var Branch = require('branch');
 var Tree = require('tree');
+var Stone = require('stone');
 
 function handleGathering() {
-    utils.forEach(state.branches, function (branch) {
-        if (utils.intersectAABB(branch, state.human)) {
-            state.human.canGather.push(branch);
-        }
+    utils.forEach(state.gatherable, function(collection) {
+       utils.forEach(collection, function(obj) {
+           if (utils.intersectAABB(obj, state.human)) {
+               state.human.canGather.push(obj);
+           }
+       });
     });
 
     if (INPUT.spacePressed && !state.showInventory) {
         if (state.human.canGather.length === 0) {
             // TODO: make sound "Oh-oh"
         } else {
-            var id = state.human.canGather[0]._id;
-            var res = state.human.inventory.push(state.branches[id]);
+            var obj = state.human.canGather[0];
+            var res = state.human.inventory.push(state.human.canGather[0]);
             if (!res) {
                 // TODO: make sound "Oh-oh-2"
             } else {
-                state.branches[id] = null;
-                delete state.branches[id];
+                state[obj._type][obj._id] = null;
+                delete state[obj._type][obj._id];
             }
         }
     }
+}
+
+function generateObjects(factory, size) {
+    var objs = {};
+    for (var i = 0; i < 128 / size; i++) {
+        for (var j = 0; j < 128 / size; j++) {
+            var obj = factory(i, j, size);
+            if (obj) {
+                objs[obj._id] = obj;
+            }
+        }
+    }
+    return objs;
 }
 
 /**
@@ -47,15 +63,19 @@ function generateBranches() {
     return branches;
 }
 
-function generateGrass() {
-    var grass = []
-    for (var i = 0; i < 128 / 8; i++) {
-        for (var j = 0; j < 128 / 8; j++) {
-            if (utils.randint(0, 2) !== 0) continue;
-            grass.push(new Grass(i * 8, j * 8));
+function generateStones() {
+    return generateObjects(function (i, j, size) {
+        if (utils.randint(0, 64) === 0) {
+            return new Stone(i * size, j * size);
         }
-    }
-    return grass;
+    }, 8);
+}
+
+function generateGrass() {
+    return generateObjects(function (i, j, size) {
+        if (utils.randint(0, 2) !== 0) return null;
+        return new Grass(i * size, j * size);
+    }, 8);
 }
 
 function generateTrees() {
@@ -69,17 +89,18 @@ function generateTrees() {
     return trees;
 }
 
-state = {
-    trees: generateTrees(),
-    branches: generateBranches(),
-    grass: generateGrass(),
-    human: new Human(32, 32, new Inventory(4)),
-    warmSources: [new CampFire(16, 16)],
-    environment: {
-        temperature: -20
-    },
-    showInventory: false
-};
+function State() {
+    this.stones = generateStones();
+    this.trees = generateTrees();
+    this.branches = generateBranches();
+    this.grass = generateGrass();
+    this.human = new Human(32, 32, new Inventory(4));
+    this.warmSources = [new CampFire(16, 16)];
+    this.environment = {temperature: -20};
+    this.showInventory = false;
+
+    this.gatherable = [this.stones, this.branches];
+}
 
 function drawHud() {
     draw_rect_fill(0, 100, 128, 28, 0);
@@ -121,14 +142,14 @@ function drawInventory() {
 }
 
 function init() {
-
+    state = new State();
 }
 
 function update() {
     utils.forEach(state.branches, function (el) {
         el.update();
     });
-    utils.forEach(state.trees, function(el) {
+    utils.forEach(state.trees, function (el) {
         el.update();
     })
     utils.forEach(state.warmSources, function (el) {
@@ -142,22 +163,19 @@ function update() {
     });
 }
 
+function draw_el(el) {
+    el.draw();
+}
+
 function draw() {
     draw_clear_screen(0);
-    utils.forEach(state.grass, function (el) {
-        el.draw();
-    });
-    utils.forEach(state.branches, function (el) {
-        el.draw();
-    });
-    utils.forEach(state.trees, function(el) {
-        el.draw();
-    })
+    utils.forEach(state.stones, draw_el);
+    utils.forEach(state.grass, draw_el);
+    utils.forEach(state.branches, draw_el);
+    utils.forEach(state.trees, draw_el);
     state.human.draw();
-    utils.forEach(state.warmSources, function (el) {
-        el.draw();
-    })
+    utils.forEach(state.warmSources, draw_el)
     drawHud();
     drawInventory();
-    draw_text(""+ getFPS(), 116,0, 10);
+    draw_text("" + getFPS(), 116, 0, 10);
 }

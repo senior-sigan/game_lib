@@ -54,6 +54,7 @@ static bool run() {
   ctx.GetSpriteSheet()->AddSprite(branch2);
   ctx.GetSpriteSheet()->AddSprite(apple_tree1);
   ctx.GetSpriteSheet()->AddSprite(apple_tree2);
+  ctx.GetSpriteSheet()->AddSprite(stone);
 #if defined(PLATFORM_WEB)
   emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else

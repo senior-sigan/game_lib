@@ -64,24 +64,25 @@ Human.prototype._handleTemperature = function () {
     // trace(this.temperature, diff);
 }
 
+function findClosestFireTo(obj) {
+    var dists = state.warmSources.map(function (ws) {
+        return {
+            dist: utils.distance(ws.x, ws.y, obj.x, obj.y),
+            ws: ws
+        };
+    }).sort(function (a, b) {
+        return a.dist - b.dist;
+    });
+
+    if (dists.length === 0) return null;
+    return dists[0];
+}
+
 Human.prototype.update = function () {
     this.canGather.length = 0;
     this._handleMovement();
 
-    var dists = state.warmSources.map(function (ws) {
-        return {
-            dist: utils.distance(ws.x, ws.y, this.x, this.y),
-            ws: ws
-        };
-    }.bind(this)).sort(function (a, b) {
-        return a.dist - b.dist;
-    });
-
-    if (dists.length !== 0) {
-        this.closestFire = dists[0];
-    } else {
-        this.closestFire = null;
-    }
+    this.closestFire = findClosestFireTo(this);
 
     this._handleTemperature()
 }
