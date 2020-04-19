@@ -12,6 +12,7 @@ function CampFire(x, y) {
     this.life_drain = 0.01;
 
     this.temperature = 400; // температура горения дерева
+    this.animation = new utils.Animation([14, 16, 15, 16], 0.2, Math.random());
 }
 
 CampFire.prototype.toDelete = function () {
@@ -19,6 +20,12 @@ CampFire.prototype.toDelete = function () {
 }
 
 CampFire.prototype.draw = function () {
+    var sprite = this.animation.update();
+    draw_sprite(sprite, this.x, this.y);
+}
+
+/**
+ CampFire.prototype.draw = function () {
     if (this.life <= 0) {
         // TODO: рисовать угольки
         return;
@@ -49,6 +56,7 @@ CampFire.prototype.draw = function () {
         this.y + 1 - oY, 8
     );
 }
+ **/
 
 CampFire.prototype.update = function () {
     if (this.life > 0) {
@@ -58,7 +66,7 @@ CampFire.prototype.update = function () {
     }
 }
 
-CampFire.prototype.feed = function() {
+CampFire.prototype.feed = function () {
     this.life = this.maxLife;
 }
 

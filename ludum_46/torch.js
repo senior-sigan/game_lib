@@ -8,7 +8,7 @@ function Torch(x, y) {
     this.width = 8;
     this.height = 8;
     this.sprite = 9;
-    this.animation = new utils.Animation([9, 10], 0.5, Math.random());
+    this.animation = new utils.Animation([9, 10], 0.3, Math.random());
 }
 
 Torch.prototype.update = function () {

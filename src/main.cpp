@@ -60,6 +60,9 @@ static bool run() {
   ctx.GetSpriteSheet()->AddSprite(hummer_icon);
   ctx.GetSpriteSheet()->AddSprite(bonfire_icon);
   ctx.GetSpriteSheet()->AddSprite(feed_fire_icon);
+  ctx.GetSpriteSheet()->AddSprite(fire1);
+  ctx.GetSpriteSheet()->AddSprite(fire2);
+  ctx.GetSpriteSheet()->AddSprite(fire3);
 #if defined(PLATFORM_WEB)
   emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
