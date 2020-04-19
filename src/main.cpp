@@ -17,7 +17,7 @@ void UpdateDrawFrame() {
 static bool run() {
   JsRuntimeHolder js(script_path);
   Context ctx(
-      128, 128,
+      192, 128,
       {
           {"up", KEY_UP},
           {"down", KEY_DOWN},
