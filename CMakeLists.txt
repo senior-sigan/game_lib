@@ -37,3 +37,21 @@ add_subdirectory(vendor/raylib)
 target_include_directories(${PROJECT_NAME} PUBLIC SYSTEM vendor/duktape)
 target_include_directories(${PROJECT_NAME} PUBLIC SYSTEM vendor/raylib/src)
 target_link_libraries(${PROJECT_NAME} duktape raylib)
+
+
+function(create_zip output_file input_files working_dir)
+    add_custom_command(
+        COMMAND ${CMAKE_COMMAND} -E tar "cf" "${output_file}" --format=zip -- ${input_files}
+        WORKING_DIRECTORY "${working_dir}"
+        OUTPUT  "${output_file}"
+        DEPENDS ${input_files}
+        COMMENT "Zipping to ${output_file}."
+    )
+endfunction()
+
+
+if (EMSCRIPTEN)
+    list(APPEND BundleFiles "${CMAKE_BINARY_DIR}/index.html" "${CMAKE_BINARY_DIR}/fantasy_console.wasm" "${CMAKE_BINARY_DIR}/fantasy_console.js")
+    create_zip("${CMAKE_BINARY_DIR}/web_bundle.zip" "${BundleFiles}" ${CMAKE_BINARY_DIR})
+    add_custom_target("make_web_bundle" ALL DEPENDS "${CMAKE_BINARY_DIR}/web_bundle.zip")
+endif()
