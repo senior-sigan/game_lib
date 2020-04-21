@@ -205,6 +205,27 @@ duk_ret_t js_GetFPS(duk_context *ctx) {
   return 1;
 }
 
+duk_ret_t js_LoadSprite(duk_context *ctx) {
+  duk_size_t sz;
+  auto ptr = static_cast<unsigned char *>(duk_require_buffer_data(ctx, 0, &sz));
+  auto width = duk_require_int(ctx, 1);
+  auto height = duk_require_int(ctx, 2);
+  if (sz != width * height) {
+    return DUK_RET_RANGE_ERROR;
+  }
+  std::vector<std::vector<int>> buffer;
+  buffer.resize(height);
+  for (int i = 0; i < height; i++) {
+    buffer[i].resize(width);
+    for (int j = 0; j < width; j++) {
+      buffer[i][j] = *ptr++;
+    }
+  }
+  GetContext()->GetSpriteSheet()->AddSprite(buffer);
+
+  return 0;
+}
+
 static const struct {
   duk_c_function func;
   int params;
@@ -223,7 +244,8 @@ static const struct {
     {js_ShowText, 6, "draw_text"},
     {js_GetFPS, 0, "getFPS"},
     {js_IsButtonPressed, 1, "isPressed"},
-    {js_GetKeyPressed, 0, "getPressed"}
+    {js_GetKeyPressed, 0, "getPressed"},
+    {js_LoadSprite, 3, "loadSprite"}
     //    {js_ImportMusic, 2, "importMusic"},
     //    {js_ImportSFX, 2, "importSFX"},
     //    {js_PlayMusic, 2, "playMusic"},

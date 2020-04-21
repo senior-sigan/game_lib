@@ -2,7 +2,6 @@
 
 #include "context.hpp"
 #include "js_runtime.hpp"
-#include "ludum_46/sprites.hpp"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
@@ -45,25 +44,6 @@ static bool run() {
       });
   SetContext(&ctx);
   GetContext()->Init(&js);
-  // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-  ctx.GetSpriteSheet()->AddSprite(boy);
-  ctx.GetSpriteSheet()->AddSprite(grass0);
-  ctx.GetSpriteSheet()->AddSprite(grass1);
-  ctx.GetSpriteSheet()->AddSprite(branch0);
-  ctx.GetSpriteSheet()->AddSprite(branch1);
-  ctx.GetSpriteSheet()->AddSprite(branch2);
-  ctx.GetSpriteSheet()->AddSprite(apple_tree1);
-  ctx.GetSpriteSheet()->AddSprite(apple_tree2);
-  ctx.GetSpriteSheet()->AddSprite(stone);
-  ctx.GetSpriteSheet()->AddSprite(torch_icon1);
-  ctx.GetSpriteSheet()->AddSprite(torch_icon2);
-  ctx.GetSpriteSheet()->AddSprite(hummer_icon);
-  ctx.GetSpriteSheet()->AddSprite(bonfire_icon);
-  ctx.GetSpriteSheet()->AddSprite(feed_fire_icon);
-  ctx.GetSpriteSheet()->AddSprite(fire1);
-  ctx.GetSpriteSheet()->AddSprite(fire2);
-  ctx.GetSpriteSheet()->AddSprite(fire3);
-  ctx.GetSpriteSheet()->AddSprite(logo);
 #if defined(PLATFORM_WEB)
   emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else

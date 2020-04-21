@@ -1,3 +1,4 @@
+var sprites = require('sprites');
 var utils = require('utils');
 var Branch = require('branch');
 var CampFire = require('camp_fire');
@@ -12,6 +13,7 @@ var LogoScene = require('logo_scene');
 var GameScene = require('game_scene');
 
 function init() {
+    sprites.load();
     sceneManager = new SceneManager([
         new LogoScene(),
         new GameScene()

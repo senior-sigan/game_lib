@@ -22,6 +22,8 @@ declare function draw_text(text: string, x: number, y: number, color: number, si
 
 declare function draw_sprite(idx: number, x: number, y: number, scale?: number);
 
+declare function loadSprite(buffer: Uint8Array, width: number, height: number);
+
 declare function isPressed(key: number);
 
 declare function trace(text: string): void;
