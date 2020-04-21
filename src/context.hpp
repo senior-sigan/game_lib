@@ -8,17 +8,15 @@
 #include <string>
 
 #include "core/i_runtime.hpp"
+#include "core/sprite_sheet.hpp"
+
+class Canvas;
 
 class Context {
   bool should_stop_ = false;
   IRuntime* runtime_{};
-  Rectangle canvasField_{};
-  Rectangle dest_rect_{};
-  float scale_ = 1.0f;
-  RenderTexture2D canvas_{};
-
-  void UpdateDestRect();
-
+  Canvas* canvas_{};
+  SpriteSheet sprites{};
  public:
   const int canvas_width_;
   const int canvas_height_;
@@ -31,6 +29,10 @@ class Context {
   void Update();
   void Reset();
   ~Context();
+
+  SpriteSheet* GetSpriteSheet() {
+    return &sprites;
+  }
 
   [[nodiscard]] Color GetColor(int idx) const;
 
@@ -52,6 +54,10 @@ class Context {
   [[nodiscard]] bool ShouldExit() const;
 
   [[nodiscard]] Vector2 GetVirtualMousePosition() const;
+
+  [[nodiscard]] float GetScale() const;
+
+  [[nodiscard]] int GetMultiplier() const;
 };
 
 Context* GetContext();

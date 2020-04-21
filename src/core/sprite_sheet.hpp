@@ -1,8 +1,12 @@
 #pragma once
 
-#include <array>
+#include <vector>
+#include <raylib.h>
 
 class SpriteSheet {
-  std::array<std::array<int, 128>, 128> data;
+  std::vector<Texture2D> sprites_;
+
  public:
+  void AddSprite(std::vector<std::vector<int>> sprite);
+  [[nodiscard]] Texture2D GetSprite(int idx) const;
 };

@@ -23,7 +23,10 @@ web_clean:
 web_reload:
 	emcmake cmake -Bcmake-build-web -DPLATFORM=Web
 
-web_build:
+web_clean_js:
+	rm cmake-build-web/fantasy_console.js
+
+web_build: web_reload
 	cmake --build cmake-build-web -j 4
 
 vendor_zip:
@@ -32,5 +35,8 @@ vendor_zip:
 vendor_unzip:
 	unzip vendor.zip
 
-run_game:
+run_examples:
 	cd examples; ../cmake-build-debug/fantasy_console lunar.js
+
+run_game:
+	cd ludum_46; ../cmake-build-debug/fantasy_console main.js
