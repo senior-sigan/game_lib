@@ -59,7 +59,7 @@ var flagSprite = makeFlagSprite();
 
 //===================
 
-utils.randint = function (min_, max_) {
+Math.randint = function (min_, max_) {
     return (Math.random() * max_ + min_) >> 0;
 };
 
@@ -106,8 +106,8 @@ function getVelStat() {
 
 function makeStars() {
     for (var i = 0; i < 20; i++) {
-        var x = utils.randint(0, 128);
-        var y = utils.randint(0, 128);
+        var x = Math.randint(0, 128);
+        var y = Math.randint(0, 128);
         State.stars.push([x, y]);
     }
 }
@@ -151,10 +151,10 @@ function drawStats() {
 function drawExplosion() {
     for (var i = 0; i < State.explosion; i++) {
         draw_circle_fill(
-            State.x + 8 + i / 2 - utils.randint(0, i),
-            State.y + 15 - utils.randint(0, i),
-            utils.randint(0, i / 5),
-            utils.randint(0, 15)
+            State.x + 8 + i / 2 - Math.randint(0, i),
+            State.y + 15 - Math.randint(0, i),
+            Math.randint(0, i / 5),
+            Math.randint(0, 15)
         );
     }
     State.explosion -= 0.2;
