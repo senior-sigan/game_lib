@@ -2,6 +2,7 @@
 
 #include "context.hpp"
 #include "js/js_runtime.hpp"
+#include "test_runtime.hpp"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
@@ -14,7 +15,9 @@ void UpdateDrawFrame() {
 }
 
 static bool run() {
-  JsRuntimeHolder js(script_path);
+//  JsRuntimeHolder runtime(script_path);
+  TestRuntime runtime;
+
   Context ctx(
       192, 128,
       {
@@ -32,7 +35,7 @@ static bool run() {
               {62, 105, 88, 255}}
       });
   SetContext(&ctx);
-  GetContext()->Init(&js);
+  GetContext()->Init(&runtime);
 #if defined(PLATFORM_WEB)
   emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
