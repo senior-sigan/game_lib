@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "context.hpp"
-#include "core/i_runtime.hpp"
+#include "../context.hpp"
+#include "../core/i_runtime.hpp"
 
 typedef struct duk_hthread duk_context;
 

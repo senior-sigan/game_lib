@@ -1,7 +1,7 @@
 #include <duktape.h>
 
 #include "context.hpp"
-#include "js_runtime.hpp"
+#include "js/js_runtime.hpp"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>

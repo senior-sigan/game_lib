@@ -3,7 +3,7 @@
 #include <duktape.h>
 #include <raylib.h>
 
-#include "context.hpp"
+#include "../context.hpp"
 #include "duk_helpers.hpp"
 
 Color GetDukColor(duk_context *ctx, int idx) {

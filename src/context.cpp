@@ -3,11 +3,8 @@
 #include <raylib.h>
 
 #include <algorithm>
-#include <cmath>
 
-#include "canvas.hpp"
-
-static constexpr Vector2 ZeroVector2{0, 0};
+#include "core/canvas.hpp"
 
 static Vector2 ClampValue(Vector2 value, Vector2 min, Vector2 max) {
   Vector2 result = value;
