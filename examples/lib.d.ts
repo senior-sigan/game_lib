@@ -26,6 +26,8 @@ declare function loadSprite(buffer: Uint8Array, width: number, height: number);
 
 declare function isPressed(key: number);
 
+declare function isDown(key: number);
+
 declare function trace(text: string): void;
 
 declare function getFPS(): number;
@@ -43,38 +45,11 @@ declare var TIME: number;
 declare var DELTA_TIME: number;
 
 declare namespace INPUT {
-    var up: boolean;
-    var down: boolean;
-    var left: boolean;
-    var right: boolean;
-    var start: boolean;
-    var pause: boolean;
-    var space: boolean;
-    var z: boolean;
-    var x: boolean;
-    var upPressed: boolean;
-    var downPressed: boolean;
-    var leftPressed: boolean;
-    var rightPressed: boolean;
-    var startPressed: boolean;
-    var pausePressed: boolean;
-    var spacePressed: boolean;
-    var zPressed: boolean;
-    var xPressed: boolean;
-    var upReleased: boolean;
-    var downReleased: boolean;
-    var leftReleased: boolean;
-    var rightReleased: boolean;
-    var startReleased: boolean;
-    var pauseReleased: boolean;
-    var spaceReleased: boolean;
-    var zReleased: boolean;
-    var xReleased: boolean;
-    var mousePressed: boolean;
-    var mouseDown: boolean;
-    var mouseReleased: boolean;
-    var mouseX: number;
-    var mouseY: number;
+    const mousePressed: boolean;
+    const mouseDown: boolean;
+    const mouseReleased: boolean;
+    const mouseX: number;
+    const mouseY: number;
 }
 
 declare const KEY_A: number;

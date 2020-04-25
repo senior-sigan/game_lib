@@ -14,11 +14,11 @@ SceneManager.prototype.onRender = function () {
     }
     this.scenes[this.currentScene].onRender();
 
-    if (INPUT.spacePressed) {
+    if (isPressed(KEY_SPACE)) {
         trace("Transition to next scene");
         this.currentScene = (this.currentScene + 1) % this.scenes.length;
     }
-    if (INPUT.startPressed) {
+    if (isPressed(KEY_ESCAPE)) {
         exit();
     }
 };

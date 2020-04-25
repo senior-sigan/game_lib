@@ -23,7 +23,7 @@ function init() {
 }
 
 function update() {
-    if (INPUT.zPressed) {
+    if (isPressed(KEY_R)) {
         reset();
     }
 }

@@ -198,7 +198,7 @@ function moveRocket() {
     }
 
     if (State.landed === false) {
-        if (INPUT.up || INPUT.mouseDown) {
+        if (isDown(KEY_W) || INPUT.mouseDown) {
             State.trust = 1;
             // Pfff-pfff sound
         } else {
@@ -221,7 +221,7 @@ function update() {
     moveStars();
     moveRocket();
 
-    if (INPUT.startReleased) {
+    if (isPressed(KEY_R)) {
         trace("RESET");
         reset();
     }

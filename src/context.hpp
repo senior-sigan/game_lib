@@ -20,10 +20,8 @@ class Context {
  public:
   const int canvas_width_;
   const int canvas_height_;
-  const std::map<std::string, KeyboardKey> keys;
   const std::vector<Color> palette;
-  Context(int canvas_width, int canvas_height, const std::map<std::string, KeyboardKey>& keys,
-          const std::vector<Color>& palette);
+  Context(int canvas_width, int canvas_height, const std::vector<Color>& palette);
 
   void Init(IRuntime* runtime);
   void Update();

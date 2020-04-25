@@ -63,9 +63,8 @@ void Context::Reset() {
 Color Context::GetColor(int idx) const {
   return palette.at(idx % palette.size());
 }
-Context::Context(int canvas_width, int canvas_height, const std::map<std::string, KeyboardKey>& keys,
-                 const std::vector<Color>& palette)
-    : canvas_width_(canvas_width), canvas_height_(canvas_height), keys(keys), palette(palette) {}
+Context::Context(int canvas_width, int canvas_height, const std::vector<Color>& palette)
+    : canvas_width_(canvas_width), canvas_height_(canvas_height), palette(palette) {}
 float Context::GetScale() const {
   return canvas_->GetScale();
 }

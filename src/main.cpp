@@ -18,17 +18,6 @@ static bool run() {
   Context ctx(
       192, 128,
       {
-          {"up", KEY_UP},
-          {"down", KEY_DOWN},
-          {"left", KEY_LEFT},
-          {"right", KEY_RIGHT},
-          {"start", KEY_ENTER},
-          {"pause", KEY_P},
-          {"space", KEY_SPACE},
-          {"z", KEY_Z},
-          {"x", KEY_X},
-      },
-      {
           {{43, 40, 33, 255},
               {98, 76, 60, 255},
               {217, 172, 139, 255},

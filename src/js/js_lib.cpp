@@ -194,6 +194,13 @@ duk_ret_t js_IsButtonPressed(duk_context *ctx) {
   return 1;
 }
 
+duk_ret_t js_IsButtonDown(duk_context *ctx) {
+  auto key = duk_to_int(ctx, 0);
+  auto res = IsKeyDown(key);
+  duk_push_boolean(ctx, res);
+  return 1;
+}
+
 duk_ret_t js_GetKeyPressed(duk_context *ctx) {
   auto res = GetKeyPressed();
   duk_push_int(ctx, res);
@@ -244,6 +251,7 @@ static const struct {
     {js_ShowText, 6, "draw_text"},
     {js_GetFPS, 0, "getFPS"},
     {js_IsButtonPressed, 1, "isPressed"},
+    {js_IsButtonDown, 1, "isDown"},
     {js_GetKeyPressed, 0, "getPressed"},
     {js_LoadSprite, 3, "loadSprite"}
     //    {js_ImportMusic, 2, "importMusic"},
@@ -254,39 +262,25 @@ static const struct {
 
 static void RegisterInputs(duk_context *ctx) {
   auto idx = duk_push_object(ctx);
-  for (auto &key : GetContext()->keys) {
-    if (IsKeyDown(key.second)) {
-      duk_push_boolean(ctx, true);
-      duk_put_prop_string(ctx, idx, key.first.c_str());
-    }
-    if (IsKeyPressed(key.second)) {
-      duk_push_boolean(ctx, true);
-      duk_put_prop_string(ctx, idx, (key.first + "Pressed").c_str());
-    }
-    if (IsKeyReleased(key.second)) {
-      duk_push_boolean(ctx, true);
-      duk_put_prop_string(ctx, idx, (key.first + "Released").c_str());
-    }
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-      duk_push_boolean(ctx, true);
-      duk_put_prop_string(ctx, idx, "mousePressed");
-    }
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-      duk_push_boolean(ctx, true);
-      duk_put_prop_string(ctx, idx, "mouseReleased");
-    }
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-      duk_push_boolean(ctx, true);
-      duk_put_prop_string(ctx, idx, "mouseDown");
-    }
-
-    auto mpos = GetContext()->GetVirtualMousePosition();
-    duk_push_int(ctx, mpos.x);
-    duk_put_prop_string(ctx, idx, "mouseX");
-
-    duk_push_int(ctx, mpos.y);
-    duk_put_prop_string(ctx, idx, "mouseY");
+  if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    duk_push_boolean(ctx, true);
+    duk_put_prop_string(ctx, idx, "mousePressed");
   }
+  if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+    duk_push_boolean(ctx, true);
+    duk_put_prop_string(ctx, idx, "mouseReleased");
+  }
+  if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+    duk_push_boolean(ctx, true);
+    duk_put_prop_string(ctx, idx, "mouseDown");
+  }
+
+  auto mpos = GetContext()->GetVirtualMousePosition();
+  duk_push_int(ctx, mpos.x);
+  duk_put_prop_string(ctx, idx, "mouseX");
+
+  duk_push_int(ctx, mpos.y);
+  duk_put_prop_string(ctx, idx, "mouseY");
   duk_put_global_string(ctx, "INPUT");
 }
 
